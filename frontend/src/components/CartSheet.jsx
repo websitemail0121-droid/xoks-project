@@ -6,6 +6,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetDescription,
 } from "@/components/ui/sheet";
 import { useCart } from "@/context/CartContext";
 import { formatPrice, FREE_SHIPPING_THRESHOLD } from "@/lib/api";
@@ -40,6 +41,9 @@ export const CartSheet = () => {
           <SheetTitle className="font-display text-3xl uppercase text-white text-left tracking-wide">
             O teu carrinho
           </SheetTitle>
+          <SheetDescription className="sr-only">
+            Reveja e ajuste os artigos no seu carrinho de compras
+          </SheetDescription>
         </SheetHeader>
 
         {items.length === 0 ? (
