@@ -31,7 +31,7 @@ export const ValueProposition = () => {
     <section id="vantagens" className="relative py-24 sm:py-32 bg-[#0A0A0A]">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <div className="max-w-2xl mb-16">
-          <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#CCFF00]">
+          <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2]">
             Porquê XOK'S
           </span>
           <h2 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-none uppercase text-white mt-3">
@@ -57,7 +57,7 @@ export const ValueProposition = () => {
               >
                 {isFirst && <div className="absolute inset-0 bg-black/40" />}
                 <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-xl bg-[#CCFF00] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <div className="w-14 h-14 rounded-xl bg-[#7EDAF2] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <Icon className="w-7 h-7 text-black" />
                   </div>
                 </div>
@@ -75,7 +75,7 @@ export const ValueProposition = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
           <div className="relative z-10 p-8 sm:p-12 max-w-xl">
             <h3 className="font-display text-3xl sm:text-4xl uppercase text-white">
-              Testadas em campo. <span className="text-[#CCFF00]">Aprovadas por profissionais.</span>
+              Testadas em campo. <span className="text-[#7EDAF2]">Aprovadas por profissionais.</span>
             </h3>
             <p className="text-zinc-300 mt-3">
               Cada par XOK'S passa por testes de impacto reais antes de chegar aos teus pés.

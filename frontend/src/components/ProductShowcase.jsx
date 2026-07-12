@@ -34,7 +34,7 @@ export const ProductShowcase = ({ product }) => {
           className="lg:sticky lg:top-24"
         >
           <div className="relative rounded-3xl overflow-hidden bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border border-white/10 aspect-square flex items-center justify-center">
-            <div className="absolute top-5 left-5 z-10 bg-[#CCFF00] text-black text-xs font-bold uppercase px-3 py-1 rounded-full tracking-wide">
+            <div className="absolute top-5 left-5 z-10 bg-[#7EDAF2] text-black text-xs font-bold uppercase px-3 py-1 rounded-full tracking-wide">
               Best Seller
             </div>
             <img
@@ -52,7 +52,7 @@ export const ProductShowcase = ({ product }) => {
                   data-testid={`product-thumb-${i}`}
                   onClick={() => setActiveImg(i)}
                   className={`w-20 h-20 rounded-xl overflow-hidden border transition-colors bg-[#151515] ${
-                    activeImg === i ? "border-[#CCFF00]" : "border-white/10 hover:border-white/30"
+                    activeImg === i ? "border-[#7EDAF2]" : "border-white/10 hover:border-white/30"
                   }`}
                 >
                   <img src={g} alt="" className="w-full h-full object-contain p-1" />
@@ -66,7 +66,7 @@ export const ProductShowcase = ({ product }) => {
         <div>
           <div className="flex items-center gap-1 mb-3">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-4 h-4 fill-[#CCFF00] text-[#CCFF00]" />
+              <Star key={i} className="w-4 h-4 fill-[#7EDAF2] text-[#7EDAF2]" />
             ))}
             <span className="text-sm text-zinc-400 ml-2">4.9 · 1.284 avaliações</span>
           </div>
@@ -74,7 +74,7 @@ export const ProductShowcase = ({ product }) => {
           <h2 data-testid="product-name" className="font-display text-[clamp(2.5rem,5vw,3.75rem)] leading-none uppercase text-white">
             {product.name}
           </h2>
-          <p className="text-[#CCFF00] font-semibold mt-2">{product.tagline}</p>
+          <p className="text-[#7EDAF2] font-semibold mt-2">{product.tagline}</p>
 
           <p className="text-zinc-400 leading-relaxed mt-5">{product.description}</p>
 
@@ -83,14 +83,14 @@ export const ProductShowcase = ({ product }) => {
               {formatPrice(product.price, product.currency)}
             </span>
             <span className="text-zinc-500 line-through">{formatPrice(product.price * 1.4, product.currency)}</span>
-            <span className="text-[#CCFF00] font-bold text-sm">-29%</span>
+            <span className="text-[#7EDAF2] font-bold text-sm">-29%</span>
           </div>
 
           {/* Specs */}
           <ul className="mt-8 grid sm:grid-cols-2 gap-3">
             {product.specs?.map((s, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-zinc-300">
-                <Check className="w-4 h-4 text-[#CCFF00] mt-0.5 shrink-0" />
+                <Check className="w-4 h-4 text-[#7EDAF2] mt-0.5 shrink-0" />
                 {s}
               </li>
             ))}
@@ -107,7 +107,7 @@ export const ProductShowcase = ({ product }) => {
                   onClick={() => setSize(s)}
                   className={`w-12 h-12 rounded-lg font-bold border transition-colors ${
                     size === s
-                      ? "bg-[#CCFF00] text-black border-[#CCFF00]"
+                      ? "bg-[#7EDAF2] text-black border-[#7EDAF2]"
                       : "bg-transparent text-white border-white/20 hover:border-white/50"
                   }`}
                 >
@@ -141,7 +141,7 @@ export const ProductShowcase = ({ product }) => {
             <button
               data-testid="add-to-cart-btn"
               onClick={handleAdd}
-              className="cta-glow flex-1 inline-flex items-center justify-center gap-2 bg-[#CCFF00] hover:bg-[#E6FF4D] text-black font-bold px-8 py-4 rounded-full uppercase tracking-wide"
+              className="cta-glow flex-1 inline-flex items-center justify-center gap-2 bg-[#7EDAF2] hover:bg-[#A5E8F7] text-black font-bold px-8 py-4 rounded-full uppercase tracking-wide"
             >
               <ShoppingCart className="w-5 h-5" />
               Adicionar ao Carrinho

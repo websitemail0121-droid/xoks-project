@@ -21,8 +21,8 @@ export default function OrderSuccess() {
         className="max-w-lg w-full text-center"
         data-testid="order-success"
       >
-        <div className="w-20 h-20 rounded-full bg-[#CCFF00]/10 border border-[#CCFF00]/40 flex items-center justify-center mx-auto mb-6">
-          <CheckCircle2 className="w-11 h-11 text-[#CCFF00]" />
+        <div className="w-20 h-20 rounded-full bg-[#7EDAF2]/10 border border-[#7EDAF2]/40 flex items-center justify-center mx-auto mb-6">
+          <CheckCircle2 className="w-11 h-11 text-[#7EDAF2]" />
         </div>
         <h1 className="font-display text-5xl uppercase text-white">Encomenda confirmada!</h1>
         <p className="text-zinc-400 mt-4">
@@ -33,7 +33,7 @@ export default function OrderSuccess() {
           <div className="flex items-center gap-2 text-zinc-400 text-sm">
             <Package className="w-4 h-4" /> Número da encomenda
           </div>
-          <p data-testid="order-number" className="font-display text-3xl text-[#CCFF00] mt-1">
+          <p data-testid="order-number" className="font-display text-3xl text-[#7EDAF2] mt-1">
             {orderNumber}
           </p>
 
@@ -49,7 +49,7 @@ export default function OrderSuccess() {
               ))}
               <div className="flex justify-between pt-3 border-t border-white/10 font-bold">
                 <span className="text-white">Total</span>
-                <span className="text-[#CCFF00]">{formatPrice(order.total)}</span>
+                <span className="text-[#7EDAF2]">{formatPrice(order.total)}</span>
               </div>
               <p className="text-xs text-zinc-500 pt-2">
                 Enviaremos atualizações para {order.shipping?.email}.
@@ -61,7 +61,7 @@ export default function OrderSuccess() {
         <Link
           to="/"
           data-testid="continue-shopping-btn"
-          className="cta-glow inline-block mt-8 bg-[#CCFF00] text-black font-bold px-8 py-3 rounded-full uppercase tracking-wide"
+          className="cta-glow inline-block mt-8 bg-[#7EDAF2] text-black font-bold px-8 py-3 rounded-full uppercase tracking-wide"
         >
           Voltar à loja
         </Link>

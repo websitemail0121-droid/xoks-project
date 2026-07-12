@@ -17,7 +17,7 @@ const Field = ({ label, name, value, onChange, type = "text", required = true, p
       onChange={onChange}
       required={required}
       placeholder={placeholder}
-      className="bg-transparent border border-white/15 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 outline-none focus:border-[#CCFF00] focus:ring-2 focus:ring-[#CCFF00]/30 transition-colors"
+      className="bg-transparent border border-white/15 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 outline-none focus:border-[#7EDAF2] focus:ring-2 focus:ring-[#7EDAF2]/30 transition-colors"
     />
   </div>
 );
@@ -97,7 +97,7 @@ export default function Checkout() {
         <Link
           to="/"
           data-testid="back-to-shop-btn"
-          className="cta-glow bg-[#CCFF00] text-black font-bold px-8 py-3 rounded-full uppercase tracking-wide"
+          className="cta-glow bg-[#7EDAF2] text-black font-bold px-8 py-3 rounded-full uppercase tracking-wide"
         >
           Voltar à loja
         </Link>
@@ -113,7 +113,7 @@ export default function Checkout() {
             <ArrowLeft className="w-4 h-4" /> Voltar
           </Link>
           <span className="font-display text-2xl text-white">
-            XOK'S <span className="text-[#CCFF00]">CHECKOUT</span>
+            XOK'S <span className="text-[#7EDAF2]">CHECKOUT</span>
           </span>
           <span className="flex items-center gap-1 text-xs text-zinc-500">
             <Lock className="w-3 h-3" /> Seguro
@@ -162,7 +162,7 @@ export default function Checkout() {
                 type="checkbox"
                 checked={sameAsShipping}
                 onChange={(e) => setSameAsShipping(e.target.checked)}
-                className="w-5 h-5 accent-[#CCFF00]"
+                className="w-5 h-5 accent-[#7EDAF2]"
               />
               <span className="text-sm text-zinc-300">Usar os mesmos dados do envio</span>
             </label>
@@ -190,7 +190,7 @@ export default function Checkout() {
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
               placeholder="Instruções de entrega, etc."
-              className="w-full bg-transparent border border-white/15 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 outline-none focus:border-[#CCFF00] focus:ring-2 focus:ring-[#CCFF00]/30 transition-colors"
+              className="w-full bg-transparent border border-white/15 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 outline-none focus:border-[#7EDAF2] focus:ring-2 focus:ring-[#7EDAF2]/30 transition-colors"
             />
           </section>
 
@@ -202,7 +202,7 @@ export default function Checkout() {
             data-testid="place-order-btn"
             type="submit"
             disabled={submitting}
-            className="cta-glow w-full inline-flex items-center justify-center gap-2 bg-[#CCFF00] hover:bg-[#E6FF4D] disabled:opacity-60 text-black font-bold px-8 py-4 rounded-full uppercase tracking-wide"
+            className="cta-glow w-full inline-flex items-center justify-center gap-2 bg-[#7EDAF2] hover:bg-[#A5E8F7] disabled:opacity-60 text-black font-bold px-8 py-4 rounded-full uppercase tracking-wide"
           >
             {submitting ? "A processar..." : `Confirmar Encomenda · ${formatPrice(total)}`}
           </button>
@@ -217,7 +217,7 @@ export default function Checkout() {
                 <div key={item.key} className="flex gap-3" data-testid={`summary-item-${item.product_id}`}>
                   <div className="w-16 h-16 rounded-lg bg-[#1a1a1a] border border-white/10 overflow-hidden flex items-center justify-center shrink-0 relative">
                     <img src={item.image} alt={item.name} className="w-full h-full object-contain p-1" />
-                    <span className="absolute -top-1 -right-1 bg-[#CCFF00] text-black text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                    <span className="absolute -top-1 -right-1 bg-[#7EDAF2] text-black text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
                       {item.quantity}
                     </span>
                   </div>
@@ -240,7 +240,7 @@ export default function Checkout() {
               </div>
               <div className="flex justify-between text-lg font-bold pt-2 border-t border-white/10">
                 <span className="text-white">Total</span>
-                <span className="text-[#CCFF00]" data-testid="summary-total">{formatPrice(total)}</span>
+                <span className="text-[#7EDAF2]" data-testid="summary-total">{formatPrice(total)}</span>
               </div>
             </div>
           </div>

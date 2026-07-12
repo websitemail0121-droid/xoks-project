@@ -54,7 +54,7 @@ export const CartSheet = () => {
             </p>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-[#CCFF00] font-semibold hover:underline"
+              className="text-[#7EDAF2] font-semibold hover:underline"
             >
               Continuar a comprar
             </button>
@@ -64,7 +64,7 @@ export const CartSheet = () => {
             <div className="flex-1 overflow-y-auto p-6 space-y-5">
               {remaining > 0 && (
                 <div className="text-sm text-zinc-400 bg-[#151515] border border-white/10 rounded-lg p-3">
-                  Faltam <span className="text-[#CCFF00] font-bold">{formatPrice(remaining)}</span> para
+                  Faltam <span className="text-[#7EDAF2] font-bold">{formatPrice(remaining)}</span> para
                   envio grátis.
                 </div>
               )}
@@ -85,7 +85,7 @@ export const CartSheet = () => {
                         <button
                           data-testid={`cart-dec-${item.product_id}`}
                           onClick={() => updateQuantity(item.key, item.quantity - 1)}
-                          className="w-8 h-8 flex items-center justify-center hover:text-[#CCFF00]"
+                          className="w-8 h-8 flex items-center justify-center hover:text-[#7EDAF2]"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
@@ -93,7 +93,7 @@ export const CartSheet = () => {
                         <button
                           data-testid={`cart-inc-${item.product_id}`}
                           onClick={() => updateQuantity(item.key, item.quantity + 1)}
-                          className="w-8 h-8 flex items-center justify-center hover:text-[#CCFF00]"
+                          className="w-8 h-8 flex items-center justify-center hover:text-[#7EDAF2]"
                         >
                           <Plus className="w-3 h-3" />
                         </button>
@@ -123,12 +123,12 @@ export const CartSheet = () => {
               </div>
               <div className="flex justify-between text-lg font-bold pt-2 border-t border-white/10">
                 <span>Total</span>
-                <span data-testid="cart-total" className="text-[#CCFF00]">{formatPrice(total)}</span>
+                <span data-testid="cart-total" className="text-[#7EDAF2]">{formatPrice(total)}</span>
               </div>
               <button
                 data-testid="checkout-btn"
                 onClick={goToCheckout}
-                className="cta-glow w-full inline-flex items-center justify-center gap-2 bg-[#CCFF00] hover:bg-[#E6FF4D] text-black font-bold px-6 py-4 rounded-full uppercase tracking-wide mt-2"
+                className="cta-glow w-full inline-flex items-center justify-center gap-2 bg-[#7EDAF2] hover:bg-[#A5E8F7] text-black font-bold px-6 py-4 rounded-full uppercase tracking-wide mt-2"
               >
                 Finalizar Compra
                 <ArrowRight className="w-5 h-5" />

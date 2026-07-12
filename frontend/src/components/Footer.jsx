@@ -6,7 +6,7 @@ export const Footer = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <span className="font-display text-3xl text-white">
-            PATRICKGOMES<span className="text-[#CCFF00]">FR</span> XOK'S
+            PATRICKGOMES<span className="text-[#7EDAF2]">FR</span> XOK'S
           </span>
           <p className="text-zinc-500 mt-3 max-w-xs">
             Caneleiras de alta performance para futebolistas que não aceitam limites.
@@ -15,9 +15,9 @@ export const Footer = () => {
         <div>
           <h4 className="font-bold text-white uppercase text-sm tracking-wide mb-4">Loja</h4>
           <ul className="space-y-2 text-zinc-400 text-sm">
-            <li><a href="#produto" className="hover:text-[#CCFF00] transition-colors">Caneleiras XOK'S</a></li>
-            <li><a href="#vantagens" className="hover:text-[#CCFF00] transition-colors">Vantagens</a></li>
-            <li><a href="#atletas" className="hover:text-[#CCFF00] transition-colors">Atletas</a></li>
+            <li><a href="#produto" className="hover:text-[#7EDAF2] transition-colors">Caneleiras XOK'S</a></li>
+            <li><a href="#vantagens" className="hover:text-[#7EDAF2] transition-colors">Vantagens</a></li>
+            <li><a href="#atletas" className="hover:text-[#7EDAF2] transition-colors">Atletas</a></li>
           </ul>
         </div>
         <div>

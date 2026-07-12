@@ -21,9 +21,9 @@ export const Hero = ({ onCta }) => {
           transition={{ duration: 0.7, ease: "easeOut" }}
           className="max-w-3xl"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#CCFF00]/40 bg-[#CCFF00]/5 px-4 py-1.5 mb-6">
-            <ShieldCheck className="w-4 h-4 text-[#CCFF00]" />
-            <span className="text-xs font-bold tracking-widest uppercase text-[#CCFF00]">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#7EDAF2]/40 bg-[#7EDAF2]/5 px-4 py-1.5 mb-6">
+            <ShieldCheck className="w-4 h-4 text-[#7EDAF2]" />
+            <span className="text-xs font-bold tracking-widest uppercase text-[#7EDAF2]">
               Performance de Elite
             </span>
           </div>
@@ -31,7 +31,7 @@ export const Hero = ({ onCta }) => {
           <h1 className="font-display text-[clamp(3rem,9vw,6rem)] leading-[0.9] text-white uppercase">
             Protege o teu jogo.
             <br />
-            <span className="text-[#CCFF00] text-glow">Domina o campo.</span>
+            <span className="text-[#7EDAF2] text-glow">Domina o campo.</span>
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-zinc-300 max-w-xl leading-relaxed">
@@ -43,7 +43,7 @@ export const Hero = ({ onCta }) => {
             <button
               data-testid="hero-cta-btn"
               onClick={onCta}
-              className="cta-glow group inline-flex items-center justify-center gap-2 bg-[#CCFF00] hover:bg-[#E6FF4D] text-black font-bold text-base px-8 py-4 rounded-full uppercase tracking-wide"
+              className="cta-glow group inline-flex items-center justify-center gap-2 bg-[#7EDAF2] hover:bg-[#A5E8F7] text-black font-bold text-base px-8 py-4 rounded-full uppercase tracking-wide"
             >
               Comprar Caneleiras XOK'S
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

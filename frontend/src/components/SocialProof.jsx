@@ -42,17 +42,17 @@ export const SocialProof = () => {
             <img src={ATHLETE} alt="Atleta XOK'S" className="absolute inset-0 w-full h-full object-cover grayscale" />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
             <div className="absolute bottom-0 left-0 p-8">
-              <Quote className="w-10 h-10 text-[#CCFF00] mb-3" />
+              <Quote className="w-10 h-10 text-[#7EDAF2] mb-3" />
               <p className="text-xl font-semibold text-white leading-snug">
                 "Confio nas XOK'S em cada jogo. É a diferença entre proteger a carreira ou arriscá-la."
               </p>
-              <p className="mt-4 font-display text-2xl uppercase text-[#CCFF00]">Capitão da equipa</p>
+              <p className="mt-4 font-display text-2xl uppercase text-[#7EDAF2]">Capitão da equipa</p>
             </div>
           </motion.div>
 
           {/* Reviews */}
           <div className="lg:col-span-7">
-            <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#CCFF00]">Prova Social</span>
+            <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2]">Prova Social</span>
             <h2 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-none uppercase text-white mt-3 mb-10">
               Quem joga, confia
             </h2>
@@ -66,11 +66,11 @@ export const SocialProof = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="rounded-2xl border border-white/10 bg-[#121212] p-6 hover:border-[#CCFF00]/30 transition-colors"
+                  className="rounded-2xl border border-white/10 bg-[#121212] p-6 hover:border-[#7EDAF2]/30 transition-colors"
                 >
                   <div className="flex items-center gap-1 mb-3">
                     {[...Array(r.rating)].map((_, k) => (
-                      <Star key={k} className="w-4 h-4 fill-[#CCFF00] text-[#CCFF00]" />
+                      <Star key={k} className="w-4 h-4 fill-[#7EDAF2] text-[#7EDAF2]" />
                     ))}
                   </div>
                   <p className="text-zinc-200 leading-relaxed">"{r.text}"</p>

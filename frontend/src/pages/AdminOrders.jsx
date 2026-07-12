@@ -15,7 +15,7 @@ const STATUS = [
   { value: "pending", label: "Pendente", color: "text-amber-400 bg-amber-400/10 border-amber-400/30" },
   { value: "processing", label: "Em processamento", color: "text-blue-400 bg-blue-400/10 border-blue-400/30" },
   { value: "shipped", label: "Enviada", color: "text-purple-400 bg-purple-400/10 border-purple-400/30" },
-  { value: "delivered", label: "Entregue", color: "text-[#CCFF00] bg-[#CCFF00]/10 border-[#CCFF00]/30" },
+  { value: "delivered", label: "Entregue", color: "text-[#7EDAF2] bg-[#7EDAF2]/10 border-[#7EDAF2]/30" },
   { value: "cancelled", label: "Cancelada", color: "text-red-400 bg-red-400/10 border-red-400/30" },
 ];
 
@@ -61,13 +61,13 @@ export default function AdminOrders() {
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <span className="font-display text-2xl text-white">
-              XOK'S <span className="text-[#CCFF00]">ADMIN</span>
+              XOK'S <span className="text-[#7EDAF2]">ADMIN</span>
             </span>
           </div>
           <button
             data-testid="admin-refresh-btn"
             onClick={load}
-            className="flex items-center gap-2 text-sm border border-white/15 hover:border-[#CCFF00] px-4 py-2 rounded-full transition-colors text-white"
+            className="flex items-center gap-2 text-sm border border-white/15 hover:border-[#7EDAF2] px-4 py-2 rounded-full transition-colors text-white"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} /> Atualizar
           </button>
@@ -85,7 +85,7 @@ export default function AdminOrders() {
           </div>
           <div className="rounded-xl border border-white/10 bg-[#121212] p-6" data-testid="stat-revenue">
             <div className="flex items-center gap-2 text-zinc-400 text-sm"><TrendingUp className="w-4 h-4" /> Receita total</div>
-            <p className="font-display text-4xl text-[#CCFF00] mt-2">{formatPrice(totalRevenue)}</p>
+            <p className="font-display text-4xl text-[#7EDAF2] mt-2">{formatPrice(totalRevenue)}</p>
           </div>
           <div className="rounded-xl border border-white/10 bg-[#121212] p-6" data-testid="stat-pending">
             <div className="flex items-center gap-2 text-zinc-400 text-sm"><Clock className="w-4 h-4" /> Pendentes</div>
@@ -119,7 +119,7 @@ export default function AdminOrders() {
                     className="grid grid-cols-2 md:grid-cols-12 gap-4 px-6 py-4 items-center cursor-pointer hover:bg-white/[0.02]"
                     onClick={() => setExpanded(isOpen ? null : o.order_number)}
                   >
-                    <div className="md:col-span-2 font-bold text-[#CCFF00]">{o.order_number}</div>
+                    <div className="md:col-span-2 font-bold text-[#7EDAF2]">{o.order_number}</div>
                     <div className="md:col-span-3 text-white text-sm truncate">
                       {o.shipping?.full_name}
                       <span className="block text-zinc-500 text-xs">{o.shipping?.email}</span>
