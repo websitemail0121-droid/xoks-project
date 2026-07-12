@@ -5,9 +5,12 @@ export const Footer = () => {
     <footer className="bg-black border-t border-white/10 py-14">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
-          <span className="font-display text-3xl text-white">
-            PATRICKGOMES<span className="text-[#7EDAF2]">FR</span> XOK'S
-          </span>
+          <div className="flex items-center gap-3">
+            <img src="/xoks-logo.png" alt="XOK'S" className="h-16 w-auto" />
+            <span className="font-display text-2xl text-white leading-none">
+              PATRICKGOMES<span className="text-[#7EDAF2]">FR</span>
+            </span>
+          </div>
           <p className="text-zinc-500 mt-3 max-w-xs">
             Caneleiras de alta performance para futebolistas que não aceitam limites.
           </p>

@@ -14,12 +14,10 @@ export const Navigation = () => {
       className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-black/60 border-b border-white/10"
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-        <Link to="/" data-testid="nav-logo" className="flex items-center gap-2 group">
+        <Link to="/" data-testid="nav-logo" className="flex items-center gap-2.5 group">
+          <img src="/xoks-emblem.png" alt="XOK'S" className="h-9 w-auto" />
           <span className="font-display text-2xl sm:text-3xl tracking-wide text-white leading-none">
             PATRICKGOMES<span className="text-[#7EDAF2]">FR</span>
-          </span>
-          <span className="hidden sm:inline text-[10px] font-bold tracking-[0.3em] text-zinc-500 border border-white/10 px-1.5 py-0.5 rounded">
-            XOK'S
           </span>
         </Link>
 
