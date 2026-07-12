@@ -1,0 +1,122 @@
+{
+  "theme": "dark",
+  "archetype": "The Performance Pro",
+  "typography": {
+    "headings": {
+      "fontFamily": "'Bebas Neue', 'Oswald', 'Barlow Condensed', sans-serif",
+      "weights": ["400", "700", "900"],
+      "letterSpacing": "tracking-tighter",
+      "textTransform": "uppercase",
+      "instruction": "Use robust, condensed sans-serif for headings to evoke elite athletic performance. Never use generic 'Inter' for H1-H3. Use text-[clamp(3rem,8vw,5rem)] for Hero."
+    },
+    "body": {
+      "fontFamily": "'Manrope', 'Inter', sans-serif",
+      "weights": ["400", "500", "600"],
+      "letterSpacing": "tracking-normal",
+      "instruction": "Clean, geometric body font to balance the heavy headings. Use high contrast for readability."
+    }
+  },
+  "colors": {
+    "background": {
+      "base": "#0A0A0A",
+      "surface": "#121212",
+      "surfaceGlass": "rgba(255, 255, 255, 0.05)"
+    },
+    "text": {
+      "primary": "#FFFFFF",
+      "secondary": "#A1A1AA"
+    },
+    "accent": {
+      "primary": "#CCFF00",
+      "hover": "#E6FF4D",
+      "instruction": "Use this neon lime green (Verde-lima) EXCLUSIVELY for key CTAs ('Comprar Caneleiras XOK\\'S', 'Adicionar ao Carrinho') and active states. Do not use for large backgrounds."
+    },
+    "border": {
+      "default": "rgba(255, 255, 255, 0.1)",
+      "focus": "#CCFF00"
+    }
+  },
+  "visual enhancers": {
+    "surfaces": "Use Glassmorphism 2.0 (backdrop-blur-xl with a 1px border-white/10) for the sticky nav and slide-out cart. Use pure black or dark charcoal for deep backgrounds.",
+    "shadows": "Minimal external shadows. Use drop-shadows on typography over images to ensure readability. Use sharp 1px solid strokes to define elements.",
+    "textures": "Incorporate carbon fiber textures strategically in the 'Proposta de Valor' section."
+  },
+  "components": [
+    {
+      "name": "Navigation",
+      "path": "/app/frontend/src/components/Navigation.jsx",
+      "instruction": "Sticky top, backdrop-blur-xl bg-black/60. Logo left, Cart icon right (triggers Sheet)."
+    },
+    {
+      "name": "Slide-out Cart",
+      "path": "/app/frontend/src/components/ui/sheet.jsx",
+      "instruction": "Use Shadcn Sheet component. Dark surface, distinct neon 'Finalizar Compra' button at the bottom."
+    },
+    {
+      "name": "Checkout Form",
+      "path": "/app/frontend/src/components/Checkout.jsx",
+      "instruction": "One-page checkout. Minimalist inputs: transparent background, border-b only or sharp 1px border. Focus state must ring neon lime."
+    },
+    {
+      "name": "Value Proposition Bento",
+      "path": "/app/frontend/src/components/ValueProposition.jsx",
+      "instruction": "Use raw HTML+Tailwind for an asymmetrical Bento grid (Grid cols 1 md:cols-3) to highlight the 3 pillars."
+    }
+  ],
+  "grids": {
+    "bento_marketing": "Base Grid: grid-cols-1 md:grid-cols-3 lg:grid-cols-12. Gap Strategy: Wide (gap-8 to gap-12). Never fill 100% of the grid perfectly.",
+    "dashboard_admin": "Base Grid: grid-cols-1 md:grid-cols-3 lg:grid-cols-4. Gap Strategy: Tight (gap-4 or gap-6). Use for Admin orders list."
+  },
+  "layouts": {
+    "hero": "Full-height (min-h-[90vh]) with the stadium background image masked heavily in black/charcoal (bg-black/60) to ensure text legibility. Large heading aligned center or left, vibrant CTA.",
+    "product_showcase": "Asymmetrical layout. Left: Sticky product area with clean dark background. Right: Scrolling specifications, price highlighted, and Add to Cart button.",
+    "admin_orders": "Dense, functional high-contrast dashboard for managing orders. Cardless table."
+  },
+  "motion": {
+    "entrance": "Fade-in and translate-y up on scroll for main sections.",
+    "hover": "Glowing hover effects on the main CTA button (box-shadow neon glow).",
+    "micro": "Purposeful micro-interactions on the Add to Cart and sliding cart. Use framer-motion."
+  },
+  "accessibility": {
+    "contrast": "Ensure all text on images has a dark overlay (bg-black/60) to meet APCA contrast ratios.",
+    "focus": "All focus rings must use the accent color (#CCFF00) and have a 2px offset.",
+    "motion": "Respect prefers-reduced-motion media query."
+  },
+  "3d libraries": {
+    "decision": "Skip heavy 3D rendering to maintain peak performance and conversion rates. Rely on framer-motion for smooth 2D transformations."
+  },
+  "image_urls": [
+    {
+      "url": "https://images.unsplash.com/photo-1599158150601-1417ebbaafdd?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDR8MHwxfHNlYXJjaHw0fHxmb290YmFsbGVyJTIwc3RhZGl1bSUyMG5pZ2h0fGVufDB8fHx8MTc4Mzg3NTcxMnww&ixlib=rb-4.1.0&q=85",
+      "description": "Football stadium at night",
+      "category": "Hero Background",
+      "instruction": "Overlay with heavy bg-black/70 to make text pop."
+    },
+    {
+      "url": "https://images.pexels.com/photos/596815/pexels-photo-596815.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "description": "Carbon fiber texture",
+      "category": "Value Proposition / Material Section",
+      "instruction": "Use as a background pattern for the 'Material Ultra Resistente' bento card."
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHwxfHxzb2NjZXIlMjBwbGF5ZXIlMjBsZWdzJTIwY2xlYXRzfGVufDB8fHx8MTc4Mzg3NTcxMnww&ixlib=rb-4.1.0&q=85",
+      "description": "Soccer cleats and ball",
+      "category": "Product Context",
+      "instruction": "Use in the feature highlight section to anchor the product to the sport."
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1504364269860-8be73aabdff2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNDR8MHwxfHNlYXJjaHwxfHxhdGhsZXRlJTIwcG9ydHJhaXQlMjBpbnRlbnNlfGVufDB8fHx8MTc4Mzg3NTcxMnww&ixlib=rb-4.1.0&q=85",
+      "description": "Intense athlete portrait b&w",
+      "category": "Testimonial / Social Proof",
+      "instruction": "Use for the elite athlete testimonial photo."
+    }
+  ],
+  "instructions_to_main_agent": [
+    "Install the necessary fonts: Google Fonts (Bebas Neue, Manrope).",
+    "Do not build HTML-based components for advanced interactions like the Cart, use Shadcn Sheet.",
+    "Implement the landing page primarily with pure HTML/Tailwind for customizability, breaking away from boring symmetry.",
+    "Ensure the Volt/Lime accent (#CCFF00) is used sparingly, ONLY for actionable elements like 'Adicionar ao Carrinho' to maximize conversion.",
+    "Ensure checkout form is contained in one page (One-Page Checkout) with intuitive fields."
+  ],
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": "All interactive and key informational elements MUST include a `data-testid` attribute to facilitate robust automated testing. Avoid generic centered layouts and simplistic gradients. Ensure layered elements with proper z-index. Apply transitions exclusively to active elements avoiding universal `transition: all`. Do not center align the app container text."
+}
