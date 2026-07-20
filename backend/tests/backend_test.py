@@ -14,15 +14,16 @@ def session():
 
 
 # ---------- Products ----------
-def test_get_products_returns_5_active(session):
+def test_get_products_returns_3_active(session):
     r = session.get(f"{API}/products")
     assert r.status_code == 200
     data = r.json()
     assert isinstance(data, list)
     ids = {p["id"] for p in data}
-    expected = {"xoks-pro-elite", "xoks-carbon-blue", "xoks-silver-strike",
-                "xoks-junior-flash", "xoks-stealth-ankle"}
+    expected = {"xoks-pro-elite", "xoks-carbon-blue", "xoks-stealth-ankle"}
     assert expected.issubset(ids), f"Missing seeded products: {expected - ids}"
+    # baseline should be exactly 3 active
+    assert len([p for p in data if p.get("active", True)]) == 3
 
 
 def test_get_product_by_id(session):
