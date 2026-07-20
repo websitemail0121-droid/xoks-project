@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Feather, ShieldCheck, Hexagon, Activity, ShieldCheck as ShieldIcon, Award, Lock } from "lucide-react";
+import { ArrowRight, Feather, ShieldCheck, Hexagon, Activity, Award, Lock } from "lucide-react";
 
 const SHINS = "/product-hero.png";
 
@@ -12,7 +12,7 @@ const specs = [
 ];
 
 const trust = [
-  { icon: ShieldIcon, title: "Proteção Garantida", desc: "Tecnologia de fibra de carbono premium." },
+  { icon: ShieldCheck, title: "Proteção Garantida", desc: "Tecnologia de fibra de carbono premium." },
   { icon: Award, title: "Qualidade Premium", desc: "Materiais de alta performance e durabilidade." },
   { icon: Lock, title: "Compra Segura", desc: "Os teus dados protegidos do início ao fim." },
 ];
