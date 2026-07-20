@@ -1,78 +1,153 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowRight, Feather, ShieldCheck, Wind, Zap, Settings, Lock } from "lucide-react";
 
-const HERO_BG =
-  "https://images.unsplash.com/photo-1599158150601-1417ebbaafdd?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDR8MHwxfHNlYXJjaHw0fHxmb290YmFsbGVyJTIwc3RhZGl1bSUyMG5pZ2h0fGVufDB8fHx8MTc4Mzg3NTcxMnww&ixlib=rb-4.1.0&q=85";
+const ATHLETE = "/athlete.png";
+const SHINS = "/shins.png";
+
+const EDGE_MASK = {
+  WebkitMaskImage:
+    "radial-gradient(ellipse 72% 88% at 50% 46%, #000 55%, transparent 100%)",
+  maskImage:
+    "radial-gradient(ellipse 72% 88% at 50% 46%, #000 55%, transparent 100%)",
+};
+
+const features = [
+  { icon: Feather, label: "Leve e\nResistente" },
+  { icon: ShieldCheck, label: "Máxima\nProteção" },
+  { icon: Wind, label: "Conforto e\nRespirabilidade" },
+  { icon: Zap, label: "Design\nModerno" },
+];
+
+const trust = [
+  { icon: ShieldCheck, title: "Proteção Garantida", desc: "Tecnologia de fibra de carbono premium." },
+  { icon: Settings, title: "Qualidade Premium", desc: "Materiais de alta performance e durabilidade." },
+  { icon: Lock, title: "Compra Segura", desc: "Os teus dados protegidos do início ao fim." },
+];
+
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+};
+const item = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
 
 export const Hero = ({ onCta }) => {
   return (
-    <section className="relative min-h-[92vh] flex items-center overflow-hidden">
-      <div className="absolute inset-0">
-        <img src={HERO_BG} alt="Estádio de futebol" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black/75" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
+    <section className="relative min-h-screen flex flex-col overflow-hidden bg-black">
+      {/* background: glow + carbon shins */}
+      <div className="absolute inset-0 z-0">
+        <div
+          className="absolute right-0 top-1/2 -translate-y-1/2 w-[70%] h-[85%]"
+          style={{
+            background:
+              "radial-gradient(circle at 68% 50%, rgba(126,218,242,0.13), transparent 62%)",
+          }}
+        />
+        <img
+          src={SHINS}
+          alt=""
+          aria-hidden
+          style={EDGE_MASK}
+          className="absolute right-[0%] lg:right-[3%] top-1/2 -translate-y-1/2 h-[66%] sm:h-[74%] lg:h-[84%] w-auto object-contain select-none pointer-events-none"
+        />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-24 pb-16 w-full">
+      {/* athlete */}
+      <motion.img
+        src={ATHLETE}
+        alt="Atleta XOK'S"
+        initial={{ opacity: 0, scale: 1.04 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.9, ease: "easeOut" }}
+        style={EDGE_MASK}
+        className="hidden md:block absolute z-10 bottom-0 left-[46%] lg:left-[43%] -translate-x-1/2 h-[86%] lg:h-[92%] w-auto object-contain select-none pointer-events-none"
+      />
+
+      {/* content */}
+      <div className="relative z-20 flex-1 flex items-center pt-24 pb-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="max-w-3xl"
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="max-w-7xl mx-auto w-full px-5 sm:px-8"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#7EDAF2]/40 bg-[#7EDAF2]/5 px-4 py-1.5 mb-6">
-            <ShieldCheck className="w-4 h-4 text-[#7EDAF2]" />
-            <span className="text-xs font-bold tracking-widest uppercase text-[#7EDAF2]">
-              Performance de Elite
-            </span>
-          </div>
-
-          <h1 className="font-display text-[clamp(3rem,9vw,6rem)] leading-[0.9] text-white uppercase">
-            Protege o teu jogo.
-            <br />
-            <span className="text-[#7EDAF2] text-glow">Domina o campo.</span>
-          </h1>
-
-          <p className="mt-6 text-lg sm:text-xl text-zinc-300 max-w-xl leading-relaxed">
-            Caneleiras <span className="font-bold text-white">XOK'S</span> concebidas para os que não aceitam
-            limites. Proteção máxima, leveza extrema e exclusividade em cada corte.
-          </p>
-
-          <div className="mt-10 flex flex-col sm:flex-row gap-4">
-            <button
-              data-testid="hero-cta-btn"
-              onClick={onCta}
-              className="cta-glow group inline-flex items-center justify-center gap-2 bg-[#7EDAF2] hover:bg-[#A5E8F7] text-black font-bold text-base px-8 py-4 rounded-full uppercase tracking-wide"
+          <div className="max-w-xl">
+            <motion.p
+              variants={item}
+              className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2] mb-5"
             >
-              Comprar Caneleiras XOK'S
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <a
-              href="#vantagens"
-              className="inline-flex items-center justify-center gap-2 border border-white/20 hover:border-white/50 text-white font-semibold px-8 py-4 rounded-full transition-colors"
-            >
-              Ver Vantagens
-            </a>
-          </div>
+              / Carbon Fiber Premium
+            </motion.p>
 
-          <div className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-4 text-sm text-zinc-400">
-            <div>
-              <span className="block font-display text-3xl text-white">55g</span>
-              Peso por caneleira
-            </div>
-            <div className="h-8 w-px bg-white/10 hidden sm:block" />
-            <div>
-              <span className="block font-display text-3xl text-white">12K+</span>
-              Atletas equipados
-            </div>
-            <div className="h-8 w-px bg-white/10 hidden sm:block" />
-            <div>
-              <span className="block font-display text-3xl text-white">4.9★</span>
-              Avaliação média
-            </div>
+            <motion.h1
+              variants={item}
+              className="font-display text-[clamp(3.25rem,8vw,6.5rem)] leading-[0.85] uppercase text-white"
+            >
+              Proteção
+              <br />
+              que te leva
+              <br />
+              <span className="text-[#7EDAF2]">além</span>
+            </motion.h1>
+
+            <motion.p
+              variants={item}
+              className="mt-6 text-lg text-zinc-400 max-w-md leading-relaxed"
+            >
+              Leveza, resistência e performance para quem{" "}
+              <span className="text-white font-semibold">desafia os limites.</span>
+            </motion.p>
+
+            <motion.div variants={item} className="mt-8">
+              <button
+                data-testid="hero-cta-btn"
+                onClick={onCta}
+                className="cta-glow group inline-flex items-center gap-3 bg-[#7EDAF2] hover:bg-[#A5E8F7] text-black font-bold text-sm px-8 py-4 rounded-lg uppercase tracking-widest"
+              >
+                Conheça os Modelos
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </motion.div>
+
+            {/* feature icons row */}
+            <motion.div variants={item} className="mt-14 flex flex-wrap gap-x-9 gap-y-6">
+              {features.map((f) => {
+                const Icon = f.icon;
+                return (
+                  <div key={f.label} className="flex flex-col items-start gap-2">
+                    <Icon className="w-6 h-6 text-[#7EDAF2]" strokeWidth={1.5} />
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 whitespace-pre-line leading-tight">
+                      {f.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </motion.div>
           </div>
         </motion.div>
+      </div>
+
+      {/* trust bar */}
+      <div className="relative z-20 border-t border-white/10 bg-black/50 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 py-5 grid grid-cols-1 sm:grid-cols-3 gap-5">
+          {trust.map((t) => {
+            const Icon = t.icon;
+            return (
+              <div key={t.title} className="flex items-center gap-4">
+                <div className="w-11 h-11 rounded-lg border border-white/10 bg-white/[0.03] flex items-center justify-center shrink-0">
+                  <Icon className="w-5 h-5 text-[#7EDAF2]" strokeWidth={1.5} />
+                </div>
+                <div>
+                  <p className="text-sm font-bold uppercase tracking-wide text-white">{t.title}</p>
+                  <p className="text-xs text-zinc-500 leading-tight mt-0.5">{t.desc}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
