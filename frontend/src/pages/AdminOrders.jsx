@@ -12,6 +12,7 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { AdminProducts } from "@/components/admin/AdminProducts";
 import { AdminAthletes } from "@/components/admin/AdminAthletes";
+import { AdminPartnerships } from "@/components/admin/AdminPartnerships";
 import { toast } from "sonner";
 
 const STATUS = [
@@ -185,10 +186,12 @@ export default function AdminOrders() {
             <TabsTrigger value="orders" data-testid="tab-orders" className="data-[state=active]:bg-[#7EDAF2] data-[state=active]:text-black">Encomendas</TabsTrigger>
             <TabsTrigger value="products" data-testid="tab-products" className="data-[state=active]:bg-[#7EDAF2] data-[state=active]:text-black">Produtos</TabsTrigger>
             <TabsTrigger value="athletes" data-testid="tab-athletes" className="data-[state=active]:bg-[#7EDAF2] data-[state=active]:text-black">Atletas</TabsTrigger>
+            <TabsTrigger value="partnerships" data-testid="tab-partnerships" className="data-[state=active]:bg-[#7EDAF2] data-[state=active]:text-black">Parcerias</TabsTrigger>
           </TabsList>
           <TabsContent value="orders"><OrdersPanel /></TabsContent>
           <TabsContent value="products"><AdminProducts /></TabsContent>
           <TabsContent value="athletes"><AdminAthletes /></TabsContent>
+          <TabsContent value="partnerships"><AdminPartnerships /></TabsContent>
         </Tabs>
       </div>
     </div>

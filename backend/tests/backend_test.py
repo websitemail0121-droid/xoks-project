@@ -197,3 +197,47 @@ def test_patch_order_status(session):
     assert r.json()["status"] == "shipped"
     r2 = session.get(f"{API}/orders/{on}")
     assert r2.json()["status"] == "shipped"
+
+
+
+# ---------- Partnerships ----------
+created_partnership_id = {"val": None}
+
+
+def test_create_partnership(session):
+    payload = {
+        "name": "TEST_Partner",
+        "organization": "TEST_Club FC",
+        "email": "test_partner@example.com",
+        "phone": "+351911111111",
+        "type": "club",
+        "message": "TEST partnership inquiry",
+    }
+    r = session.post(f"{API}/partnerships", json=payload)
+    assert r.status_code == 200, r.text
+    p = r.json()
+    assert p["name"] == "TEST_Partner"
+    assert p["email"] == "test_partner@example.com"
+    assert p["type"] == "club"
+    assert p["status"] == "new"
+    assert "id" in p and "created_at" in p
+    created_partnership_id["val"] = p["id"]
+
+
+def test_create_partnership_invalid_email(session):
+    r = session.post(f"{API}/partnerships", json={"name": "X", "email": "not-an-email"})
+    assert r.status_code == 422
+
+
+def test_list_partnerships(session):
+    r = session.get(f"{API}/partnerships")
+    assert r.status_code == 200
+    items = r.json()
+    assert isinstance(items, list)
+    assert any(x["id"] == created_partnership_id["val"] for x in items)
+
+
+def test_cleanup_partnership_via_mongo(session):
+    # No DELETE endpoint - cleanup will be handled out-of-band
+    # Just assert the created inquiry still exists
+    assert created_partnership_id["val"] is not None

@@ -3,10 +3,16 @@ import { Link, useLocation } from "react-router-dom";
 import { ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 
+const links = [
+  { to: "/produtos", label: "Produtos" },
+  { to: "/atletas", label: "Atletas" },
+  { to: "/sobre", label: "Sobre Nós" },
+  { to: "/parcerias", label: "Parcerias" },
+];
+
 export const Navigation = () => {
   const { count, setIsOpen } = useCart();
-  const location = useLocation();
-  const isHome = location.pathname === "/";
+  const { pathname } = useLocation();
 
   return (
     <header
@@ -16,29 +22,25 @@ export const Navigation = () => {
       <div className="max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
         <Link to="/" data-testid="nav-logo" className="flex items-center gap-2.5 group">
           <img src="/xoks-emblem.png" alt="XOK'S" className="h-14 w-auto" />
-          <span className="font-display text-2xl sm:text-3xl tracking-wide text-white leading-none">
+          <span className="hidden sm:inline font-display text-2xl sm:text-3xl tracking-wide text-white leading-none">
             PATRICKGOMES<span className="text-[#7EDAF2]">FR</span>
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-zinc-300">
-          {isHome ? (
-            <>
-              <a href="#produto" className="hover:text-[#7EDAF2] transition-colors" data-testid="nav-produto">
-                Produto
-              </a>
-              <a href="#vantagens" className="hover:text-[#7EDAF2] transition-colors" data-testid="nav-vantagens">
-                Vantagens
-              </a>
-              <a href="#atletas" className="hover:text-[#7EDAF2] transition-colors" data-testid="nav-atletas">
-                Atletas
-              </a>
-            </>
-          ) : (
-            <Link to="/" className="hover:text-[#7EDAF2] transition-colors">
-              Início
-            </Link>
-          )}
+        <nav className="hidden md:flex items-center gap-8 text-sm font-semibold">
+          {links.map((l) => {
+            const active = pathname === l.to;
+            return (
+              <Link
+                key={l.to}
+                to={l.to}
+                data-testid={`nav-${l.label.toLowerCase().replace(/\s|ó/g, (m) => (m === "ó" ? "o" : ""))}`}
+                className={`transition-colors ${active ? "text-[#7EDAF2]" : "text-zinc-300 hover:text-[#7EDAF2]"}`}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
           <Link to="/admin" className="text-zinc-600 hover:text-zinc-300 transition-colors" data-testid="nav-admin">
             Admin
           </Link>

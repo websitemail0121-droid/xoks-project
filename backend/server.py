@@ -308,6 +308,42 @@ async def delete_athlete(athlete_id: str):
     return {"deleted": True}
 
 
+# ---------- Partnership routes ----------
+class PartnershipCreate(BaseModel):
+    name: str
+    organization: str = ""
+    email: EmailStr
+    phone: str = ""
+    type: str = "club"
+    message: str = ""
+
+
+class Partnership(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=gen_id)
+    name: str
+    organization: str = ""
+    email: EmailStr
+    phone: str = ""
+    type: str = "club"
+    message: str = ""
+    status: str = "new"
+    created_at: str = Field(default_factory=now_iso)
+
+
+@api_router.post("/partnerships", response_model=Partnership)
+async def create_partnership(payload: PartnershipCreate):
+    inquiry = Partnership(**payload.model_dump())
+    await db.partnerships.insert_one(inquiry.model_dump())
+    return inquiry
+
+
+@api_router.get("/partnerships", response_model=List[Partnership])
+async def list_partnerships():
+    items = await db.partnerships.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    return [Partnership(**i) for i in items]
+
+
 # ---------- Order routes ----------
 @api_router.post("/orders", response_model=Order)
 async def create_order(payload: OrderCreate):

@@ -6,7 +6,7 @@ import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/api";
 import { toast } from "sonner";
 
-export const ProductGrid = ({ products }) => {
+export const ProductGrid = ({ products, hideHeader = false }) => {
   const { addItem } = useCart();
 
   const quickAdd = (e, p) => {
@@ -22,15 +22,17 @@ export const ProductGrid = ({ products }) => {
   return (
     <section id="produto" className="relative py-24 sm:py-32 bg-[#0d0d0d] border-y border-white/5">
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
-        <div className="max-w-2xl mb-14">
-          <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2]">A Coleção</span>
-          <h2 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-none uppercase text-white mt-3">
-            Escolhe a tua arma
-          </h2>
-          <p className="text-zinc-400 mt-4">
-            Toda a gama XOK'S de caneleiras de alta performance. Proteção que acompanha o teu nível.
-          </p>
-        </div>
+        {!hideHeader && (
+          <div className="max-w-2xl mb-14">
+            <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2]">A Coleção</span>
+            <h2 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-none uppercase text-white mt-3">
+              Escolhe a tua arma
+            </h2>
+            <p className="text-zinc-400 mt-4">
+              Toda a gama XOK'S de caneleiras de alta performance. Proteção que acompanha o teu nível.
+            </p>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((p, i) => (

@@ -1,20 +1,22 @@
 import React from "react";
 
-export const AthleteCarousel = ({ athletes }) => {
+export const AthleteCarousel = ({ athletes, hideHeader = false }) => {
   if (!athletes || athletes.length === 0) return null;
   const loop = [...athletes, ...athletes];
 
   return (
     <section id="atletas" className="relative py-24 sm:py-32 bg-[#0A0A0A] overflow-hidden">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 mb-12">
-        <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2]">Prova Social</span>
-        <h2 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-none uppercase text-white mt-3">
-          Atletas que confiam nas XOK'S
-        </h2>
-        <p className="text-zinc-400 mt-4 max-w-xl">
-          De campos distritais a estádios de topo — os que levam o jogo a sério equipam-se com XOK'S.
-        </p>
-      </div>
+      {!hideHeader && (
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 mb-12">
+          <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2]">Prova Social</span>
+          <h2 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-none uppercase text-white mt-3">
+            Atletas que confiam nas XOK'S
+          </h2>
+          <p className="text-zinc-400 mt-4 max-w-xl">
+            De campos distritais a estádios de topo — os que levam o jogo a sério equipam-se com XOK'S.
+          </p>
+        </div>
+      )}
 
       <div className="relative" data-testid="athlete-carousel">
         {/* edge fades */}
