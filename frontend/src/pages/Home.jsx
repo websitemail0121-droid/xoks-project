@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { useCart } from "@/context/CartContext";
 import { Navigation } from "@/components/Navigation";
 import { Hero } from "@/components/Hero";
 import { ValueProposition } from "@/components/ValueProposition";
-import { ProductShowcase } from "@/components/ProductShowcase";
+import { ProductGrid } from "@/components/ProductGrid";
+import { AthleteCarousel } from "@/components/AthleteCarousel";
 import { SocialProof } from "@/components/SocialProof";
 import { Footer } from "@/components/Footer";
 import { CartSheet } from "@/components/CartSheet";
 
 export default function Home() {
-  const [product, setProduct] = useState(null);
-  const { addItem, setIsOpen } = useCart();
+  const [products, setProducts] = useState([]);
+  const [athletes, setAthletes] = useState([]);
 
   useEffect(() => {
-    api
-      .get("/products")
-      .then((res) => setProduct(res.data[0]))
-      .catch((e) => console.error("Erro ao carregar produto", e));
+    api.get("/products").then((res) => setProducts(res.data)).catch(() => {});
+    api.get("/athletes").then((res) => setAthletes(res.data)).catch(() => {});
   }, []);
 
   const handleHeroCta = () => {
@@ -32,7 +30,8 @@ export default function Home() {
       <main>
         <Hero onCta={handleHeroCta} />
         <ValueProposition />
-        <ProductShowcase product={product} />
+        <ProductGrid products={products} />
+        <AthleteCarousel athletes={athletes} />
         <SocialProof />
       </main>
       <Footer />

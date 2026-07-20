@@ -5,9 +5,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict, BeforeValidator, EmailStr
-from typing import List, Optional, Annotated
-from bson import ObjectId
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
+from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
 
@@ -25,26 +24,66 @@ api_router = APIRouter(prefix="/api")
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-PyObjectId = Annotated[str, BeforeValidator(str)]
-
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def gen_id() -> str:
+    return str(uuid.uuid4())
+
+
 # ---------- Models ----------
-class Product(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-    id: str
+class ProductBase(BaseModel):
     name: str
-    tagline: str
-    description: str
+    tagline: str = ""
+    description: str = ""
     price: float
+    old_price: Optional[float] = None
     currency: str = "EUR"
-    image: str
+    image: str = ""
     gallery: List[str] = []
     specs: List[str] = []
     sizes: List[str] = []
+    badge: Optional[str] = None
+    featured: bool = False
+    active: bool = True
+
+
+class Product(ProductBase):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=gen_id)
+
+
+class ProductUpdate(BaseModel):
+    name: Optional[str] = None
+    tagline: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[float] = None
+    old_price: Optional[float] = None
+    image: Optional[str] = None
+    gallery: Optional[List[str]] = None
+    specs: Optional[List[str]] = None
+    sizes: Optional[List[str]] = None
+    badge: Optional[str] = None
+    featured: Optional[bool] = None
+    active: Optional[bool] = None
+
+
+class Athlete(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=gen_id)
+    name: str = ""
+    club: str = ""
+    image: str
+    order: int = 0
+
+
+class AthleteCreate(BaseModel):
+    name: str = ""
+    club: str = ""
+    image: str
+    order: int = 0
 
 
 class CartItem(BaseModel):
@@ -87,7 +126,7 @@ class OrderCreate(BaseModel):
 
 class Order(BaseModel):
     model_config = ConfigDict(extra="ignore")
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    id: str = Field(default_factory=gen_id)
     order_number: str
     items: List[CartItem]
     shipping: ShippingInfo
@@ -100,48 +139,153 @@ class Order(BaseModel):
     created_at: str = Field(default_factory=now_iso)
 
 
-# ---------- Seed ----------
-DEFAULT_PRODUCT = {
-    "id": "xoks-pro-elite",
-    "name": "Caneleiras XOK'S Pro Elite",
-    "tagline": "Proteção de elite. Leveza absoluta.",
-    "description": "As caneleiras XOK'S Pro Elite combinam uma casca externa em fibra de carbono com um núcleo de espuma EVA de alta densidade para absorver o impacto sem comprometer a leveza. Concebidas com design anatómico para se moldarem à perna, garantem conforto total durante os 90 minutos.",
-    "price": 49.99,
-    "currency": "EUR",
-    "image": "",
-    "gallery": [],
-    "specs": [
-        "Casca externa em fibra de carbono ultra resistente",
-        "Núcleo em espuma EVA de alta densidade",
-        "Peso: apenas 55g por caneleira",
-        "Design anatómico esquerdo/direito",
-        "Tratamento antibacteriano e respirável",
-        "Cintas elásticas ajustáveis incluídas",
-    ],
-    "sizes": ["S", "M", "L", "XL"],
-}
+class OrderStatusUpdate(BaseModel):
+    status: str
 
 
-async def seed_product(image_url: str, gallery: List[str]):
-    existing = await db.products.find_one({"id": DEFAULT_PRODUCT["id"]})
-    doc = dict(DEFAULT_PRODUCT)
-    doc["image"] = image_url
-    doc["gallery"] = gallery
-    if existing:
-        await db.products.update_one({"id": DEFAULT_PRODUCT["id"]}, {"$set": {"image": image_url, "gallery": gallery}})
+# ---------- Seed data ----------
+IMG = "https://static.prod-images.emergentagent.com/jobs/e3e88c3b-8ab0-416f-9559-d69eb906f401/images"
+SEED_PRODUCTS = [
+    {
+        "id": "xoks-pro-elite",
+        "name": "Caneleiras XOK'S Pro Elite",
+        "tagline": "Proteção de elite. Leveza absoluta.",
+        "description": "As caneleiras XOK'S Pro Elite combinam uma casca externa em fibra de carbono com um núcleo de espuma EVA de alta densidade para absorver o impacto sem comprometer a leveza. Concebidas com design anatómico para se moldarem à perna, garantem conforto total durante os 90 minutos.",
+        "price": 49.99,
+        "old_price": 69.99,
+        "image": f"{IMG}/4ff5651be95298b9e2040efec77f5bf4d66011d5c9e5b85cc95fe4e5a3d31208.png",
+        "gallery": [
+            f"{IMG}/4ff5651be95298b9e2040efec77f5bf4d66011d5c9e5b85cc95fe4e5a3d31208.png",
+            f"{IMG}/61995ac65891f9a1402d02b448980467ff74b5412d2169c7b07e8bf7f85af843.png",
+        ],
+        "specs": [
+            "Casca externa em fibra de carbono ultra resistente",
+            "Núcleo em espuma EVA de alta densidade",
+            "Peso: apenas 55g por caneleira",
+            "Design anatómico esquerdo/direito",
+            "Tratamento antibacteriano e respirável",
+            "Cintas elásticas ajustáveis incluídas",
+        ],
+        "sizes": ["S", "M", "L", "XL"],
+        "badge": "Best Seller",
+        "featured": True,
+    },
+    {
+        "id": "xoks-carbon-blue",
+        "name": "Caneleiras XOK'S Carbon Blue",
+        "tagline": "Estilo elétrico. Performance máxima.",
+        "description": "Edição Carbon Blue com acabamento em fibra de carbono azul elétrico e detalhes em ciano. Máxima proteção com um visual arrojado para quem se destaca dentro e fora de campo.",
+        "price": 54.99,
+        "old_price": 74.99,
+        "image": f"{IMG}/92039bac615015114b5d287989c817864fd81514090c69e93e738c15dbfa8146.png",
+        "gallery": [f"{IMG}/92039bac615015114b5d287989c817864fd81514090c69e93e738c15dbfa8146.png"],
+        "specs": [
+            "Fibra de carbono azul elétrico",
+            "Núcleo EVA de absorção de impacto",
+            "Peso: 58g por caneleira",
+            "Design anatómico premium",
+            "Cintas de fixação reforçadas",
+        ],
+        "sizes": ["S", "M", "L", "XL"],
+        "badge": "Novo",
+        "featured": True,
+    },
+    {
+        "id": "xoks-silver-strike",
+        "name": "Caneleiras XOK'S Silver Strike",
+        "tagline": "Leveza prateada. Impacto controlado.",
+        "description": "Design branco e prateado com detalhes vermelhos. Uma caneleira leve e resistente, ideal para médios e avançados que procuram velocidade sem abdicar de proteção.",
+        "price": 44.99,
+        "image": f"{IMG}/b45fa315270978a0521ddf49859317dad33e37f356d1cbab859c525b41b7717a.png",
+        "gallery": [f"{IMG}/b45fa315270978a0521ddf49859317dad33e37f356d1cbab859c525b41b7717a.png"],
+        "specs": [
+            "Casca em polímero reforçado leve",
+            "Acolchoamento premium respirável",
+            "Peso: 52g por caneleira",
+            "Detalhes de alta visibilidade",
+            "Cintas ajustáveis incluídas",
+        ],
+        "sizes": ["S", "M", "L", "XL"],
+        "featured": False,
+    },
+    {
+        "id": "xoks-junior-flash",
+        "name": "Caneleiras XOK'S Junior Flash",
+        "tagline": "Proteção para os craques do futuro.",
+        "description": "Modelo juvenil em laranja vibrante com cintas em malha. Leve, confortável e seguro — perfeito para jovens atletas em formação.",
+        "price": 34.99,
+        "old_price": 44.99,
+        "image": f"{IMG}/48437059e363fcb16ec1fa918538fcbe93eda4bb6ffae0888f6843617a053ca2.png",
+        "gallery": [f"{IMG}/48437059e363fcb16ec1fa918538fcbe93eda4bb6ffae0888f6843617a053ca2.png"],
+        "specs": [
+            "Design leve para jovens atletas",
+            "Cintas em malha respirável",
+            "Peso: 40g por caneleira",
+            "Fecho de velcro simples",
+            "Cores vibrantes",
+        ],
+        "sizes": ["XS", "S", "M"],
+        "badge": "Júnior",
+        "featured": False,
+    },
+    {
+        "id": "xoks-stealth-ankle",
+        "name": "Caneleiras XOK'S Stealth Ankle",
+        "tagline": "Proteção total. Tornozelo blindado.",
+        "description": "O modelo mais completo da gama XOK'S, com proteção integrada do tornozelo. Design stealth all-black com logo em ciano subtil. Máxima segurança para quem entra forte.",
+        "price": 64.99,
+        "old_price": 84.99,
+        "image": f"{IMG}/22c43a815fcf97429779fb32505174652436a21be4aa538c7095870ef6e9aa6d.png",
+        "gallery": [f"{IMG}/22c43a815fcf97429779fb32505174652436a21be4aa538c7095870ef6e9aa6d.png"],
+        "specs": [
+            "Proteção integrada do tornozelo",
+            "Casca em fibra de carbono stealth",
+            "Núcleo EVA de dupla densidade",
+            "Peso: 78g por caneleira",
+            "Meia de compressão incluída",
+        ],
+        "sizes": ["S", "M", "L", "XL"],
+        "badge": "Pro",
+        "featured": True,
+    },
+]
+
+SEED_ATHLETES = [
+    {"id": "ath-1", "name": "Rúben Dias", "club": "Selecção Nacional", "image": "https://images.pexels.com/photos/159594/soccer-football-player-sport-159594.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "order": 1},
+    {"id": "ath-2", "name": "João Félix", "club": "Liga dos Campeões", "image": "https://images.pexels.com/photos/32285250/pexels-photo-32285250.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "order": 2},
+    {"id": "ath-3", "name": "André Silva", "club": "Primeira Liga", "image": "https://images.pexels.com/photos/32190745/pexels-photo-32190745.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "order": 3},
+    {"id": "ath-4", "name": "Tiago Costa", "club": "Sub-23", "image": "https://images.pexels.com/photos/34627924/pexels-photo-34627924.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "order": 4},
+    {"id": "ath-5", "name": "Miguel Rocha", "club": "Distrital", "image": "https://images.unsplash.com/photo-1600985366045-c20ec2d3298a?w=940&q=80", "order": 5},
+    {"id": "ath-6", "name": "Diogo Fernandes", "club": "Academia XOK'S", "image": "https://images.unsplash.com/photo-1676746424114-56d38af59256?w=940&q=80", "order": 6},
+]
+
+
+async def seed():
+    if await db.products.count_documents({}) == 0:
+        await db.products.insert_many([dict(p) for p in SEED_PRODUCTS])
+        logger.info("Products seeded")
     else:
-        await db.products.insert_one(doc)
+        for p in SEED_PRODUCTS:
+            await db.products.update_one(
+                {"id": p["id"]},
+                {"$setOnInsert": dict(p)},
+                upsert=True,
+            )
+    if await db.athletes.count_documents({}) == 0:
+        await db.athletes.insert_many([dict(a) for a in SEED_ATHLETES])
+        logger.info("Athletes seeded")
 
 
-# ---------- Routes ----------
+# ---------- Product routes ----------
 @api_router.get("/")
 async def root():
     return {"message": "XOK'S API online"}
 
 
 @api_router.get("/products", response_model=List[Product])
-async def get_products():
-    products = await db.products.find({}, {"_id": 0}).to_list(100)
+async def get_products(include_inactive: bool = False):
+    q = {} if include_inactive else {"active": {"$ne": False}}
+    products = await db.products.find(q, {"_id": 0}).to_list(200)
     return [Product(**p) for p in products]
 
 
@@ -153,6 +297,56 @@ async def get_product(product_id: str):
     return Product(**p)
 
 
+@api_router.post("/products", response_model=Product)
+async def create_product(payload: ProductBase):
+    product = Product(**payload.model_dump())
+    await db.products.insert_one(product.model_dump())
+    return product
+
+
+@api_router.put("/products/{product_id}", response_model=Product)
+async def update_product(product_id: str, payload: ProductUpdate):
+    existing = await db.products.find_one({"id": product_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+    updates = {k: v for k, v in payload.model_dump().items() if v is not None}
+    if updates:
+        await db.products.update_one({"id": product_id}, {"$set": updates})
+    updated = await db.products.find_one({"id": product_id}, {"_id": 0})
+    return Product(**updated)
+
+
+@api_router.delete("/products/{product_id}")
+async def delete_product(product_id: str):
+    res = await db.products.delete_one({"id": product_id})
+    if res.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+    return {"deleted": True}
+
+
+# ---------- Athlete routes ----------
+@api_router.get("/athletes", response_model=List[Athlete])
+async def get_athletes():
+    athletes = await db.athletes.find({}, {"_id": 0}).sort("order", 1).to_list(200)
+    return [Athlete(**a) for a in athletes]
+
+
+@api_router.post("/athletes", response_model=Athlete)
+async def create_athlete(payload: AthleteCreate):
+    athlete = Athlete(**payload.model_dump())
+    await db.athletes.insert_one(athlete.model_dump())
+    return athlete
+
+
+@api_router.delete("/athletes/{athlete_id}")
+async def delete_athlete(athlete_id: str):
+    res = await db.athletes.delete_one({"id": athlete_id})
+    if res.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Atleta não encontrado")
+    return {"deleted": True}
+
+
+# ---------- Order routes ----------
 @api_router.post("/orders", response_model=Order)
 async def create_order(payload: OrderCreate):
     if not payload.items:
@@ -187,10 +381,6 @@ async def get_order(order_number: str):
     return Order(**o)
 
 
-class OrderStatusUpdate(BaseModel):
-    status: str
-
-
 @api_router.patch("/orders/{order_number}", response_model=Order)
 async def update_order_status(order_number: str, payload: OrderStatusUpdate):
     o = await db.orders.find_one({"order_number": order_number}, {"_id": 0})
@@ -201,17 +391,9 @@ async def update_order_status(order_number: str, payload: OrderStatusUpdate):
     return Order(**o)
 
 
-PRODUCT_IMAGE = "https://static.prod-images.emergentagent.com/jobs/e3e88c3b-8ab0-416f-9559-d69eb906f401/images/4ff5651be95298b9e2040efec77f5bf4d66011d5c9e5b85cc95fe4e5a3d31208.png"
-PRODUCT_GALLERY = [
-    "https://static.prod-images.emergentagent.com/jobs/e3e88c3b-8ab0-416f-9559-d69eb906f401/images/4ff5651be95298b9e2040efec77f5bf4d66011d5c9e5b85cc95fe4e5a3d31208.png",
-    "https://static.prod-images.emergentagent.com/jobs/e3e88c3b-8ab0-416f-9559-d69eb906f401/images/61995ac65891f9a1402d02b448980467ff74b5412d2169c7b07e8bf7f85af843.png",
-]
-
-
 @app.on_event("startup")
 async def on_startup():
-    await seed_product(PRODUCT_IMAGE, PRODUCT_GALLERY)
-    logger.info("Product seeded")
+    await seed()
 
 
 app.include_router(api_router)

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Check, ShoppingCart, Minus, Plus, Star } from "lucide-react";
 import { useCart } from "@/context/CartContext";
@@ -7,9 +7,15 @@ import { toast } from "sonner";
 
 export const ProductShowcase = ({ product }) => {
   const { addItem } = useCart();
-  const [size, setSize] = useState("M");
+  const [size, setSize] = useState(null);
   const [qty, setQty] = useState(1);
   const [activeImg, setActiveImg] = useState(0);
+
+  useEffect(() => {
+    if (product?.sizes?.length) {
+      setSize(product.sizes[Math.floor(product.sizes.length / 2)]);
+    }
+  }, [product]);
 
   if (!product) return null;
 
@@ -34,9 +40,11 @@ export const ProductShowcase = ({ product }) => {
           className="lg:sticky lg:top-24"
         >
           <div className="relative rounded-3xl overflow-hidden bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border border-white/10 aspect-square flex items-center justify-center">
-            <div className="absolute top-5 left-5 z-10 bg-[#7EDAF2] text-black text-xs font-bold uppercase px-3 py-1 rounded-full tracking-wide">
-              Best Seller
-            </div>
+            {product.badge && (
+              <div className="absolute top-5 left-5 z-10 bg-[#7EDAF2] text-black text-xs font-bold uppercase px-3 py-1 rounded-full tracking-wide">
+                {product.badge}
+              </div>
+            )}
             <img
               data-testid="product-main-image"
               src={gallery[activeImg]}
@@ -82,8 +90,14 @@ export const ProductShowcase = ({ product }) => {
             <span data-testid="product-price" className="font-display text-5xl text-white">
               {formatPrice(product.price, product.currency)}
             </span>
-            <span className="text-zinc-500 line-through">{formatPrice(product.price * 1.4, product.currency)}</span>
-            <span className="text-[#7EDAF2] font-bold text-sm">-29%</span>
+            {product.old_price && (
+              <>
+                <span className="text-zinc-500 line-through">{formatPrice(product.old_price, product.currency)}</span>
+                <span className="text-[#7EDAF2] font-bold text-sm">
+                  -{Math.round((1 - product.price / product.old_price) * 100)}%
+                </span>
+              </>
+            )}
           </div>
 
           {/* Specs */}

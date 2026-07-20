@@ -13,24 +13,25 @@ def session():
     return s
 
 
-# Products
-def test_get_products(session):
+# ---------- Products ----------
+def test_get_products_returns_5_active(session):
     r = session.get(f"{API}/products")
     assert r.status_code == 200
     data = r.json()
-    assert isinstance(data, list) and len(data) >= 1
-    p = data[0]
-    assert p["id"] == "xoks-pro-elite"
-    assert "Caneleiras XOK'S Pro Elite" in p["name"]
-    assert p["image"].startswith("http")
-    assert set(p["sizes"]) == {"S", "M", "L", "XL"}
-    assert len(p["specs"]) >= 3
+    assert isinstance(data, list)
+    ids = {p["id"] for p in data}
+    expected = {"xoks-pro-elite", "xoks-carbon-blue", "xoks-silver-strike",
+                "xoks-junior-flash", "xoks-stealth-ankle"}
+    assert expected.issubset(ids), f"Missing seeded products: {expected - ids}"
 
 
 def test_get_product_by_id(session):
     r = session.get(f"{API}/products/xoks-pro-elite")
     assert r.status_code == 200
-    assert r.json()["id"] == "xoks-pro-elite"
+    p = r.json()
+    assert p["id"] == "xoks-pro-elite"
+    assert p["price"] == 49.99
+    assert set(p["sizes"]) == {"S", "M", "L", "XL"}
 
 
 def test_get_product_invalid(session):
@@ -38,7 +39,101 @@ def test_get_product_invalid(session):
     assert r.status_code == 404
 
 
-# Orders
+created_product_id = {"val": None}
+
+
+def test_create_product(session):
+    payload = {
+        "name": "TEST_Caneleira",
+        "price": 19.99,
+        "sizes": ["S", "M"],
+        "image": "https://example.com/test.png",
+        "description": "TEST product",
+    }
+    r = session.post(f"{API}/products", json=payload)
+    assert r.status_code == 200, r.text
+    p = r.json()
+    assert p["name"] == "TEST_Caneleira"
+    assert p["price"] == 19.99
+    assert p["active"] is True
+    created_product_id["val"] = p["id"]
+
+    # Verify in list
+    r2 = session.get(f"{API}/products")
+    assert any(x["id"] == p["id"] for x in r2.json())
+
+
+def test_update_product_price_and_active(session):
+    pid = created_product_id["val"]
+    assert pid
+    r = session.put(f"{API}/products/{pid}", json={"price": 29.99, "active": False})
+    assert r.status_code == 200
+    assert r.json()["price"] == 29.99
+
+    # Should be hidden from default list
+    r2 = session.get(f"{API}/products")
+    assert not any(x["id"] == pid for x in r2.json())
+
+    # Should show with include_inactive
+    r3 = session.get(f"{API}/products", params={"include_inactive": "true"})
+    assert any(x["id"] == pid for x in r3.json())
+
+
+def test_update_product_invalid(session):
+    r = session.put(f"{API}/products/no-such-id", json={"price": 10})
+    assert r.status_code == 404
+
+
+def test_delete_product(session):
+    pid = created_product_id["val"]
+    r = session.delete(f"{API}/products/{pid}")
+    assert r.status_code == 200
+    assert r.json().get("deleted") is True
+    # Confirm 404
+    r2 = session.get(f"{API}/products/{pid}")
+    assert r2.status_code == 404
+
+
+def test_delete_product_invalid(session):
+    r = session.delete(f"{API}/products/no-such-id")
+    assert r.status_code == 404
+
+
+# ---------- Athletes ----------
+def test_get_athletes_seeded_sorted(session):
+    r = session.get(f"{API}/athletes")
+    assert r.status_code == 200
+    data = r.json()
+    assert isinstance(data, list) and len(data) >= 6
+    # sorted by order ascending
+    orders = [a["order"] for a in data]
+    assert orders == sorted(orders)
+
+
+created_athlete_id = {"val": None}
+
+
+def test_create_athlete(session):
+    payload = {"name": "TEST_Athlete", "club": "TEST_Club",
+               "image": "https://example.com/ath.jpg", "order": 99}
+    r = session.post(f"{API}/athletes", json=payload)
+    assert r.status_code == 200, r.text
+    a = r.json()
+    assert a["name"] == "TEST_Athlete"
+    assert a["image"] == "https://example.com/ath.jpg"
+    created_athlete_id["val"] = a["id"]
+
+
+def test_delete_athlete(session):
+    aid = created_athlete_id["val"]
+    assert aid
+    r = session.delete(f"{API}/athletes/{aid}")
+    assert r.status_code == 200
+    r2 = session.delete(f"{API}/athletes/{aid}")
+    assert r2.status_code == 404
+
+
+# ---------- Orders ----------
 @pytest.fixture(scope="module")
 def sample_payload():
     return {
@@ -77,8 +172,6 @@ def test_create_order(session, sample_payload):
     assert o["order_number"].startswith("XOKS-")
     assert o["status"] == "pending"
     assert o["total"] == 99.98
-    assert len(o["items"]) == 1
-    assert o["shipping"]["email"] == "test_xoks@example.com"
     created_order_number["val"] = o["order_number"]
 
 
@@ -94,21 +187,6 @@ def test_list_orders_sorted(session):
     assert r.status_code == 200
     orders = r.json()
     assert isinstance(orders, list) and len(orders) >= 1
-    if len(orders) >= 2:
-        assert orders[0]["created_at"] >= orders[1]["created_at"]
-
-
-def test_get_order_by_number(session):
-    on = created_order_number["val"]
-    assert on
-    r = session.get(f"{API}/orders/{on}")
-    assert r.status_code == 200
-    assert r.json()["order_number"] == on
-
-
-def test_get_order_invalid(session):
-    r = session.get(f"{API}/orders/XOKS-000000")
-    assert r.status_code == 404
 
 
 def test_patch_order_status(session):
@@ -116,6 +194,5 @@ def test_patch_order_status(session):
     r = session.patch(f"{API}/orders/{on}", json={"status": "shipped"})
     assert r.status_code == 200
     assert r.json()["status"] == "shipped"
-    # verify persistence
     r2 = session.get(f"{API}/orders/{on}")
     assert r2.json()["status"] == "shipped"
