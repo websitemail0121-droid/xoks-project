@@ -1,172 +1,106 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Building2, Trophy, Store, Handshake, CheckCircle2 } from "lucide-react";
-import { api } from "@/lib/api";
+import { ShieldCheck, ArrowRight } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { PageHeader } from "@/components/PageHeader";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { toast } from "sonner";
 
-const HANDSHAKE = "https://images.pexels.com/photos/4963359/pexels-photo-4963359.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940";
-
-const types = [
-  { icon: Trophy, title: "Clubes & Equipas", desc: "Equipa todo o plantel com condições exclusivas e personalização." },
-  { icon: Store, title: "Revendedores", desc: "Leva as XOK'S para a tua loja com margens competitivas." },
-  { icon: Building2, title: "Marcas & Patrocínios", desc: "Co-branding e campanhas conjuntas com a XOK'S." },
-  { icon: Handshake, title: "Embaixadores", desc: "Atletas e criadores que vivem o jogo e representam a marca." },
+const clubs = [
+  { initials: "AR", name: "Atlético Ribeira", region: "Lisboa", since: "2023", color: "#7EDAF2" },
+  { initials: "SN", name: "FC Serra Norte", region: "Porto", since: "2023", color: "#F2A65A" },
+  { initials: "UA", name: "União Atlântico", region: "Faro", since: "2024", color: "#8CF27E" },
+  { initials: "SV", name: "Sporting Vale", region: "Braga", since: "2024", color: "#F27EBE" },
+  { initials: "RM", name: "Real Montanha", region: "Coimbra", since: "2024", color: "#7E8CF2" },
+  { initials: "ES", name: "Estrela do Sul", region: "Setúbal", since: "2025", color: "#F2E27E" },
+  { initials: "AM", name: "Clube Aveiro Mar", region: "Aveiro", since: "2025", color: "#7EDAF2" },
+  { initials: "DU", name: "Douro United", region: "Vila Real", since: "2025", color: "#F26D6D" },
 ];
 
-const benefits = [
-  "Preços exclusivos por volume",
-  "Personalização de produto e branding",
-  "Apoio de marketing dedicado",
-  "Prioridade em novos lançamentos",
+const stats = [
+  { value: "+40", label: "Clubes parceiros" },
+  { value: "12K+", label: "Atletas equipados" },
+  { value: "18", label: "Distritos" },
 ];
-
-const inputCls =
-  "bg-transparent border border-white/15 rounded-lg px-4 py-3 text-white placeholder:text-zinc-600 outline-none focus:border-[#7EDAF2] focus:ring-2 focus:ring-[#7EDAF2]/30 transition-colors w-full";
 
 export default function Parcerias() {
-  const [form, setForm] = useState({ name: "", organization: "", email: "", phone: "", type: "club", message: "" });
-  const [submitting, setSubmitting] = useState(false);
-  const [done, setDone] = useState(false);
-
   useEffect(() => window.scrollTo(0, 0), []);
-
-  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
-
-  const submit = async (e) => {
-    e.preventDefault();
-    if (!form.name || !form.email) {
-      toast.error("Nome e email são obrigatórios");
-      return;
-    }
-    setSubmitting(true);
-    try {
-      await api.post("/partnerships", form);
-      setDone(true);
-      toast.success("Pedido de parceria enviado!");
-    } catch {
-      toast.error("Erro ao enviar. Tenta novamente.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   return (
     <Layout>
       <PageHeader
-        eyebrow="Cresce connosco"
-        title="Parcerias XOK'S"
-        accentWord="XOK'S"
-        subtitle="Clubes, revendedores, marcas e embaixadores — vamos levar a proteção de elite mais longe, juntos."
+        eyebrow="A nossa rede"
+        title="Clubes Parceiros"
+        accentWord="Parceiros"
+        subtitle="Clubes de todo o país que confiam nas caneleiras XOK'S para equipar os seus atletas. Estes são alguns dos parceiros que já fazem parte da família."
       />
 
       <div data-testid="parcerias-page">
-        {/* Types */}
+        {/* stats */}
+        <section className="bg-[#0d0d0d] border-b border-white/5 py-12">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-3 gap-6">
+            {stats.map((s) => (
+              <div key={s.label} className="text-center">
+                <p className="font-display text-4xl sm:text-6xl text-[#7EDAF2]">{s.value}</p>
+                <p className="text-xs sm:text-sm text-zinc-400 mt-1 uppercase tracking-wide">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* clubs grid */}
         <section className="py-20 sm:py-28 bg-[#0A0A0A]">
           <div className="max-w-7xl mx-auto px-5 sm:px-8">
-            <h2 className="font-display text-4xl uppercase text-white mb-12">Tipos de parceria</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {types.map((t, i) => {
-                const Icon = t.icon;
-                return (
-                  <motion.div
-                    key={t.title}
-                    initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.45, delay: i * 0.1 }}
-                    className="rounded-2xl border border-white/10 bg-[#121212] p-6 hover:border-[#7EDAF2]/40 transition-colors"
+            <h2 className="font-display text-4xl uppercase text-white mb-12">Onde jogamos juntos</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+              {clubs.map((c, i) => (
+                <motion.div
+                  key={c.name}
+                  data-testid={`club-${c.initials}`}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.45, delay: (i % 4) * 0.08 }}
+                  className="rounded-2xl border border-white/10 bg-[#121212] p-6 flex flex-col items-center text-center hover:border-white/25 transition-colors"
+                >
+                  {/* crest */}
+                  <div
+                    className="relative w-20 h-24 flex items-center justify-center mb-5"
+                    style={{
+                      background: `linear-gradient(160deg, ${c.color}22, transparent)`,
+                      border: `1px solid ${c.color}55`,
+                      clipPath: "polygon(50% 0, 100% 18%, 100% 70%, 50% 100%, 0 70%, 0 18%)",
+                    }}
                   >
-                    <div className="w-12 h-12 rounded-xl bg-[#7EDAF2] flex items-center justify-center mb-5">
-                      <Icon className="w-6 h-6 text-black" />
-                    </div>
-                    <h3 className="font-display text-2xl uppercase text-white leading-none">{t.title}</h3>
-                    <p className="text-sm text-zinc-400 mt-3 leading-relaxed">{t.desc}</p>
-                  </motion.div>
-                );
-              })}
+                    <span className="font-display text-3xl" style={{ color: c.color }}>
+                      {c.initials}
+                    </span>
+                  </div>
+                  <h3 className="font-display text-2xl uppercase text-white leading-none">{c.name}</h3>
+                  <p className="text-sm text-zinc-500 mt-2">{c.region}</p>
+                  <p className="text-xs text-zinc-600 mt-1">Parceiro desde {c.since}</p>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Benefits + Form */}
-        <section className="py-20 sm:py-28 bg-[#0d0d0d] border-y border-white/5">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-            <div>
-              <div className="relative rounded-3xl overflow-hidden aspect-[4/3] border border-white/10 mb-8">
-                <img src={HANDSHAKE} alt="Parceria XOK'S" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-              </div>
-              <h3 className="font-display text-3xl uppercase text-white mb-5">Vantagens para parceiros</h3>
-              <ul className="space-y-3">
-                {benefits.map((b) => (
-                  <li key={b} className="flex items-center gap-3 text-zinc-300">
-                    <CheckCircle2 className="w-5 h-5 text-[#7EDAF2] shrink-0" />
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Form */}
-            <div className="rounded-2xl border border-white/10 bg-[#121212] p-6 sm:p-8">
-              {done ? (
-                <div className="text-center py-10" data-testid="parceria-success">
-                  <CheckCircle2 className="w-16 h-16 text-[#7EDAF2] mx-auto mb-5" />
-                  <h3 className="font-display text-3xl uppercase text-white">Pedido enviado!</h3>
-                  <p className="text-zinc-400 mt-3">
-                    Obrigado pelo teu interesse. A equipa XOK'S entrará em contacto brevemente.
-                  </p>
-                </div>
-              ) : (
-                <form onSubmit={submit} className="space-y-4" data-testid="parceria-form">
-                  <h3 className="font-display text-3xl uppercase text-white">Candidata-te a parceiro</h3>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <input className={inputCls} placeholder="Nome *" data-testid="pt-name" value={form.name} onChange={(e) => set("name", e.target.value)} />
-                    <input className={inputCls} placeholder="Organização / Clube" data-testid="pt-org" value={form.organization} onChange={(e) => set("organization", e.target.value)} />
-                    <input className={inputCls} type="email" placeholder="Email *" data-testid="pt-email" value={form.email} onChange={(e) => set("email", e.target.value)} />
-                    <input className={inputCls} placeholder="Telemóvel" data-testid="pt-phone" value={form.phone} onChange={(e) => set("phone", e.target.value)} />
-                  </div>
-                  <div>
-                    <Select value={form.type} onValueChange={(v) => set("type", v)}>
-                      <SelectTrigger data-testid="pt-type" className="w-full border border-white/15 text-white bg-transparent">
-                        <SelectValue placeholder="Tipo de parceria" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-[#151515] border-white/10 text-white">
-                        <SelectItem value="club" className="text-white">Clube / Equipa</SelectItem>
-                        <SelectItem value="reseller" className="text-white">Revendedor</SelectItem>
-                        <SelectItem value="brand" className="text-white">Marca / Patrocínio</SelectItem>
-                        <SelectItem value="ambassador" className="text-white">Embaixador / Atleta</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <textarea
-                    className={inputCls}
-                    rows={4}
-                    placeholder="Conta-nos sobre ti e o teu objetivo..."
-                    data-testid="pt-message"
-                    value={form.message}
-                    onChange={(e) => set("message", e.target.value)}
-                  />
-                  <button
-                    type="submit"
-                    data-testid="pt-submit"
-                    disabled={submitting}
-                    className="cta-glow w-full bg-[#7EDAF2] hover:bg-[#A5E8F7] disabled:opacity-60 text-black font-bold px-6 py-4 rounded-full uppercase tracking-widest text-sm"
-                  >
-                    {submitting ? "A enviar..." : "Enviar pedido"}
-                  </button>
-                </form>
-              )}
-            </div>
+        {/* CTA */}
+        <section className="py-20 sm:py-28 bg-[#0d0d0d] border-t border-white/5">
+          <div className="max-w-4xl mx-auto px-5 sm:px-8 text-center">
+            <ShieldCheck className="w-12 h-12 text-[#7EDAF2] mx-auto mb-6" />
+            <h2 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-none uppercase text-white">
+              O teu clube também <span className="text-[#7EDAF2]">joga XOK'S?</span>
+            </h2>
+            <p className="text-zinc-400 mt-5 max-w-xl mx-auto">
+              Equipa toda a tua equipa com condições exclusivas. Fala connosco e junta-te à rede de clubes parceiros.
+            </p>
+            <a
+              href="mailto:geral@patrickgomesfr-xoks.pt"
+              data-testid="parcerias-cta-email"
+              className="cta-glow inline-flex items-center gap-2 mt-8 bg-[#7EDAF2] hover:bg-[#A5E8F7] text-black font-bold px-8 py-4 rounded-full uppercase tracking-widest text-sm"
+            >
+              Contactar equipa XOK'S <ArrowRight className="w-4 h-4" />
+            </a>
           </div>
         </section>
       </div>

@@ -64,15 +64,15 @@ export default function Atletas() {
               Queres ser <span className="text-[#7EDAF2]">atleta XOK'S?</span>
             </h2>
             <p className="text-zinc-400 mt-5 max-w-xl mx-auto">
-              Procuramos jogadores determinados para representar a marca. Candidata-te através da nossa área de parcerias.
+              Procuramos jogadores determinados para representar a marca. Envia-nos a tua candidatura.
             </p>
-            <Link
-              to="/parcerias"
+            <a
+              href="mailto:geral@patrickgomesfr-xoks.pt"
               data-testid="atletas-cta-parcerias"
               className="cta-glow inline-flex items-center gap-2 mt-8 bg-[#7EDAF2] hover:bg-[#A5E8F7] text-black font-bold px-8 py-4 rounded-full uppercase tracking-widest text-sm"
             >
               Candidatar-me <ArrowRight className="w-4 h-4" />
-            </Link>
+            </a>
           </div>
         </section>
       </div>
