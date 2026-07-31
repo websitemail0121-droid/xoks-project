@@ -44,11 +44,6 @@ export default function Atletas() {
                   className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 group"
                 >
                   <img src={a.image} alt={a.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
-                  <figcaption className="absolute bottom-0 left-0 right-0 p-4">
-                    {a.name && <p className="font-display text-xl uppercase text-white leading-none">{a.name}</p>}
-                    {a.club && <p className="text-xs text-[#7EDAF2] font-semibold mt-1">{a.club}</p>}
-                  </figcaption>
                 </motion.figure>
               ))}
             </div>
