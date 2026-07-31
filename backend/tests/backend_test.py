@@ -105,10 +105,25 @@ def test_get_athletes_seeded_sorted(session):
     r = session.get(f"{API}/athletes")
     assert r.status_code == 200
     data = r.json()
-    assert isinstance(data, list) and len(data) >= 6
+    assert isinstance(data, list)
+    assert len(data) == 5, f"Expected exactly 5 athletes, got {len(data)}"
     # sorted by order ascending
     orders = [a["order"] for a in data]
     assert orders == sorted(orders)
+    # Validate real-athlete seed shape: ids ath-1..ath-5, images /atleta1..5.jpg, empty name/club
+    for i, a in enumerate(data, start=1):
+        assert a["id"] == f"ath-{i}"
+        assert a["image"] == f"/atleta{i}.jpg"
+        assert a["name"] == ""
+        assert a["club"] == ""
+
+
+def test_athlete_images_reachable(session):
+    for i in range(1, 6):
+        url = f"{BASE_URL}/atleta{i}.jpg"
+        r = session.get(url)
+        assert r.status_code == 200, f"{url} -> {r.status_code}"
+        assert r.headers.get("content-type", "").startswith("image/"), f"{url} content-type={r.headers.get('content-type')}"
 
 
 created_athlete_id = {"val": None}

@@ -213,12 +213,11 @@ SEED_PRODUCTS = [
 ]
 
 SEED_ATHLETES = [
-    {"id": "ath-1", "name": "Rúben Dias", "club": "Selecção Nacional", "image": "https://images.pexels.com/photos/159594/soccer-football-player-sport-159594.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "order": 1},
-    {"id": "ath-2", "name": "João Félix", "club": "Liga dos Campeões", "image": "https://images.pexels.com/photos/32285250/pexels-photo-32285250.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "order": 2},
-    {"id": "ath-3", "name": "André Silva", "club": "Primeira Liga", "image": "https://images.pexels.com/photos/32190745/pexels-photo-32190745.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "order": 3},
-    {"id": "ath-4", "name": "Tiago Costa", "club": "Sub-23", "image": "https://images.pexels.com/photos/34627924/pexels-photo-34627924.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940", "order": 4},
-    {"id": "ath-5", "name": "Miguel Rocha", "club": "Distrital", "image": "https://images.unsplash.com/photo-1600985366045-c20ec2d3298a?w=940&q=80", "order": 5},
-    {"id": "ath-6", "name": "Diogo Fernandes", "club": "Academia XOK'S", "image": "https://images.unsplash.com/photo-1676746424114-56d38af59256?w=940&q=80", "order": 6},
+    {"id": "ath-1", "name": "", "club": "", "image": "/atleta1.jpg", "order": 1},
+    {"id": "ath-2", "name": "", "club": "", "image": "/atleta2.jpg", "order": 2},
+    {"id": "ath-3", "name": "", "club": "", "image": "/atleta3.jpg", "order": 3},
+    {"id": "ath-4", "name": "", "club": "", "image": "/atleta4.jpg", "order": 4},
+    {"id": "ath-5", "name": "", "club": "", "image": "/atleta5.jpg", "order": 5},
 ]
 
 
