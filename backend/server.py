@@ -213,11 +213,11 @@ SEED_PRODUCTS = [
 ]
 
 SEED_ATHLETES = [
-    {"id": "ath-1", "name": "", "club": "", "image": "/atleta1.jpg", "order": 1},
-    {"id": "ath-2", "name": "", "club": "", "image": "/atleta2.jpg", "order": 2},
-    {"id": "ath-3", "name": "", "club": "", "image": "/atleta3.jpg", "order": 3},
-    {"id": "ath-4", "name": "", "club": "", "image": "/atleta4.jpg", "order": 4},
-    {"id": "ath-5", "name": "", "club": "", "image": "/atleta5.jpg", "order": 5},
+    {"id": "ath-1", "name": "Telma Pereira", "club": "", "image": "/atleta1.jpg", "order": 1},
+    {"id": "ath-2", "name": "Ricardo Guimarães", "club": "", "image": "/atleta2.jpg", "order": 2},
+    {"id": "ath-3", "name": "Luís Esteves", "club": "", "image": "/atleta3.jpg", "order": 3},
+    {"id": "ath-4", "name": "Ricardo Horta", "club": "", "image": "/atleta4.jpg", "order": 4},
+    {"id": "ath-5", "name": "Douglas Tanque", "club": "", "image": "/atleta5.jpg", "order": 5},
 ]
 
 
