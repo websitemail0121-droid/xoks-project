@@ -23,7 +23,9 @@ const stats = [
 ];
 
 export default function Parcerias() {
-  useEffect(() => window.scrollTo(0, 0), []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Layout>

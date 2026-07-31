@@ -1,0 +1,22 @@
+{
+  "summary": "Frontend-only regression test for the 'destroy is not a function' TypeError on /sobre and /parcerias. Verified fix by direct-loading both pages, navigating away (unmount), running 3 mount/unmount cycles, and regression-checking /produtos, /atletas, /. Captured pageerror + console error events throughout. Result: ZERO 'destroy is not a function' errors, zero pageerrors, zero console errors, and no React error overlay in any scenario. Fix (block-body useEffect returning undefined) is working correctly.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Fix applied correctly in SobreNos.jsx (L26-28) and Parcerias.jsx (L26-28): useEffect body is a block that does not return the value of window.scrollTo, preventing React from treating it as a cleanup function.",
+    "Recommend adding an ESLint rule (react-hooks/exhaustive-deps + no-implicit-return in effect arrows) or a lint check to catch the concise-arrow useEffect anti-pattern in future PRs."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped)", "frontend": "100%"},
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Bug 'destroy is not a function' on /sobre and /parcerias is fully resolved. Verified via direct load, unmount (navigate-away), and multi-cycle mount/unmount tests. Regression on /produtos (3 cards), /atletas, and home hero all pass.",
+  "rca of the issue": "Concise-arrow useEffect `useEffect(() => window.scrollTo(0,0), [])` implicitly returned window.scrollTo's return value (undefined in most cases, but React treats any returned non-undefined value as a cleanup function). Under StrictMode double-invoke and on unmount, React invoked the returned value as a function -> 'destroy is not a function'. Fix: wrap in block body `useEffect(() => { window.scrollTo(0,0); }, [])` so the effect returns undefined, meaning no cleanup is registered."
+}

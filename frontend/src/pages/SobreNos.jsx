@@ -23,7 +23,9 @@ const stats = [
 ];
 
 export default function SobreNos() {
-  useEffect(() => window.scrollTo(0, 0), []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Layout>
