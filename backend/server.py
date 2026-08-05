@@ -52,6 +52,7 @@ class ProductBase(BaseModel):
     specs: List[str] = []
     sizes: List[str] = []
     colors: List[ColorVariant] = []
+    image_bg: str = "dark"
     badge: Optional[str] = None
     featured: bool = False
     active: bool = True
@@ -73,6 +74,7 @@ class ProductUpdate(BaseModel):
     specs: Optional[List[str]] = None
     sizes: Optional[List[str]] = None
     colors: Optional[List[ColorVariant]] = None
+    image_bg: Optional[str] = None
     badge: Optional[str] = None
     featured: Optional[bool] = None
     active: Optional[bool] = None
@@ -212,6 +214,7 @@ SEED_PRODUCTS = [
             {"name": "Laranja", "image": "/game-orange.png", "hex": "#F97316"},
             {"name": "Verde", "image": "/game-green.png", "hex": "#15803D"},
         ],
+        "image_bg": "light",
         "specs": [
             "Multi-Layer Composite Technology™",
             "Camada protetora anti-riscos",
