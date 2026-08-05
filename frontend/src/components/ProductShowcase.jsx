@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Check, ShoppingCart, Minus, Plus, Star } from "lucide-react";
+import { Check, ShoppingCart, Minus, Plus, Star, Ruler } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/api";
+import { SizeGuide } from "@/components/SizeGuide";
 import { toast } from "sonner";
 
 export const ProductShowcase = ({ product }) => {
@@ -10,21 +11,30 @@ export const ProductShowcase = ({ product }) => {
   const [size, setSize] = useState(null);
   const [qty, setQty] = useState(1);
   const [activeImg, setActiveImg] = useState(0);
+  const [color, setColor] = useState(null);
 
   useEffect(() => {
     if (product?.sizes?.length) {
       setSize(product.sizes[Math.floor(product.sizes.length / 2)]);
     }
+    setColor(product?.colors?.length ? product.colors[0] : null);
+    setActiveImg(0);
   }, [product]);
 
   if (!product) return null;
 
   const gallery = product.gallery?.length ? product.gallery : [product.image];
 
+  const selectColor = (c) => {
+    setColor(c);
+    const idx = gallery.findIndex((g) => g === c.image);
+    if (idx >= 0) setActiveImg(idx);
+  };
+
   const handleAdd = () => {
     addItem(product, size, qty);
     toast.success(`${product.name} adicionada ao carrinho`, {
-      description: `Tamanho ${size} · Quantidade ${qty}`,
+      description: `${color ? color.name + " · " : ""}Tamanho ${size} · Quantidade ${qty}`,
     });
   };
 
@@ -110,9 +120,44 @@ export const ProductShowcase = ({ product }) => {
             ))}
           </ul>
 
+          {/* Color selector */}
+          {product.colors?.length > 0 && (
+            <div className="mt-8">
+              <span className="text-sm font-semibold text-zinc-400 uppercase tracking-wide">
+                Cor: <span className="text-white">{color?.name}</span>
+              </span>
+              <div className="flex gap-3 mt-2">
+                {product.colors.map((c) => (
+                  <button
+                    key={c.name}
+                    data-testid={`color-option-${c.name}`}
+                    onClick={() => selectColor(c)}
+                    aria-label={c.name}
+                    className={`w-10 h-10 rounded-full border-2 transition-transform hover:scale-110 ${
+                      color?.name === c.name ? "border-[#7EDAF2] scale-110" : "border-white/20"
+                    }`}
+                    style={{ backgroundColor: c.hex }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Size selector */}
           <div className="mt-8">
-            <span className="text-sm font-semibold text-zinc-400 uppercase tracking-wide">Tamanho</span>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-semibold text-zinc-400 uppercase tracking-wide">Tamanho</span>
+              <SizeGuide
+                trigger={
+                  <button
+                    data-testid="size-guide-btn"
+                    className="flex items-center gap-1.5 text-sm text-[#7EDAF2] hover:text-[#A5E8F7] font-semibold transition-colors"
+                  >
+                    <Ruler className="w-4 h-4" /> Guia de tamanhos
+                  </button>
+                }
+              />
+            </div>
             <div className="flex gap-2 mt-2">
               {product.sizes?.map((s) => (
                 <button

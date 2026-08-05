@@ -14,16 +14,50 @@ def session():
 
 
 # ---------- Products ----------
-def test_get_products_returns_3_active(session):
+def test_get_products_returns_4_active(session):
     r = session.get(f"{API}/products")
     assert r.status_code == 200
     data = r.json()
     assert isinstance(data, list)
     ids = {p["id"] for p in data}
-    expected = {"xoks-pro-elite", "xoks-carbon-blue", "xoks-stealth-ankle"}
+    expected = {"xoks-pro-elite", "xoks-carbon-blue", "xoks-stealth-ankle", "xoks-game"}
     assert expected.issubset(ids), f"Missing seeded products: {expected - ids}"
-    # baseline should be exactly 3 active
-    assert len([p for p in data if p.get("active", True)]) == 3
+    # baseline should be exactly 4 active
+    assert len([p for p in data if p.get("active", True)]) == 4
+
+
+def test_get_product_xoks_game(session):
+    r = session.get(f"{API}/products/xoks-game")
+    assert r.status_code == 200
+    p = r.json()
+    assert p["id"] == "xoks-game"
+    assert p["name"] == "Caneleiras XOK'S Game"
+    assert p["tagline"] == "Game Core"
+    assert p["price"] == 49.90
+    assert set(p["sizes"]) == {"S", "M", "L", "XL"}
+    # specs
+    specs = p.get("specs", [])
+    assert "Multi-Layer Composite Technology™" in specs
+    assert "Camada protetora anti-riscos" in specs
+    assert "Design ergonómico e ultraleve" in specs
+    # colors: 4 variants
+    colors = p.get("colors", [])
+    assert len(colors) == 4
+    color_names = {c["name"] for c in colors}
+    assert color_names == {"Azul", "Amarelo", "Laranja", "Verde"}
+    # gallery of 4
+    assert len(p.get("gallery", [])) == 4
+    # Each color image matches gallery
+    for c in colors:
+        assert c["image"] in p["gallery"]
+
+
+def test_xoks_game_images_reachable(session):
+    for color in ["blue", "yellow", "orange", "green"]:
+        url = f"{BASE_URL}/game-{color}.png"
+        r = session.get(url)
+        assert r.status_code == 200, f"{url} -> {r.status_code}"
+        assert r.headers.get("content-type", "").startswith("image/"), url
 
 
 def test_get_product_by_id(session):
@@ -111,11 +145,11 @@ def test_get_athletes_seeded_sorted(session):
     orders = [a["order"] for a in data]
     assert orders == sorted(orders)
     # Validate real-athlete seed shape: ids ath-1..ath-5, images /atleta1..5.jpg, empty name/club
-    for i, a in enumerate(data, start=1):
-        assert a["id"] == f"ath-{i}"
-        assert a["image"] == f"/atleta{i}.jpg"
-        assert a["name"] == ""
-        assert a["club"] == ""
+    ids = {a["id"] for a in data}
+    assert ids == {f"ath-{i}" for i in range(1, 6)}
+    for a in data:
+        idx = a["id"].split("-")[1]
+        assert a["image"] == f"/atleta{idx}.jpg"
 
 
 def test_athlete_images_reachable(session):

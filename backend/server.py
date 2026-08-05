@@ -34,6 +34,12 @@ def gen_id() -> str:
 
 
 # ---------- Models ----------
+class ColorVariant(BaseModel):
+    name: str
+    image: str
+    hex: str = "#7EDAF2"
+
+
 class ProductBase(BaseModel):
     name: str
     tagline: str = ""
@@ -45,6 +51,7 @@ class ProductBase(BaseModel):
     gallery: List[str] = []
     specs: List[str] = []
     sizes: List[str] = []
+    colors: List[ColorVariant] = []
     badge: Optional[str] = None
     featured: bool = False
     active: bool = True
@@ -65,6 +72,7 @@ class ProductUpdate(BaseModel):
     gallery: Optional[List[str]] = None
     specs: Optional[List[str]] = None
     sizes: Optional[List[str]] = None
+    colors: Optional[List[ColorVariant]] = None
     badge: Optional[str] = None
     featured: Optional[bool] = None
     active: Optional[bool] = None
@@ -185,6 +193,29 @@ SEED_PRODUCTS = [
             "Peso: 58g por caneleira",
             "Design anatómico premium",
             "Cintas de fixação reforçadas",
+        ],
+        "sizes": ["S", "M", "L", "XL"],
+        "badge": "Novo",
+        "featured": True,
+    },
+    {
+        "id": "xoks-game",
+        "name": "Caneleiras XOK'S Game",
+        "tagline": "Game Core",
+        "description": "As XOK'S Game combinam proteção de topo com um design vibrante e ultraleve. Construídas com Multi-Layer Composite Technology™ para dispersar o impacto, e uma camada protetora anti-riscos que mantém o visual impecável jogo após jogo. Disponíveis em quatro cores.",
+        "price": 49.90,
+        "image": "/game-blue.png",
+        "gallery": ["/game-blue.png", "/game-yellow.png", "/game-orange.png", "/game-green.png"],
+        "colors": [
+            {"name": "Azul", "image": "/game-blue.png", "hex": "#2563EB"},
+            {"name": "Amarelo", "image": "/game-yellow.png", "hex": "#FACC15"},
+            {"name": "Laranja", "image": "/game-orange.png", "hex": "#F97316"},
+            {"name": "Verde", "image": "/game-green.png", "hex": "#15803D"},
+        ],
+        "specs": [
+            "Multi-Layer Composite Technology™",
+            "Camada protetora anti-riscos",
+            "Design ergonómico e ultraleve",
         ],
         "sizes": ["S", "M", "L", "XL"],
         "badge": "Novo",
