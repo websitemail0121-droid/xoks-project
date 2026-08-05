@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
 
@@ -27,6 +28,9 @@ export const SizeGuide = ({ trigger }) => {
           <DialogTitle className="font-display text-3xl uppercase tracking-wide">
             Guia de Tamanhos <span className="text-[#7EDAF2]">XOK'S Game</span>
           </DialogTitle>
+          <DialogDescription className="text-zinc-400">
+            Encontra o tamanho ideal com base na altura da caneleira e no perímetro do gémeo.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="mt-2 overflow-hidden rounded-xl border border-white/10">
