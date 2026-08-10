@@ -14,16 +14,49 @@ def session():
 
 
 # ---------- Products ----------
-def test_get_products_returns_4_active(session):
+def test_get_products_returns_5_active(session):
     r = session.get(f"{API}/products")
     assert r.status_code == 200
     data = r.json()
     assert isinstance(data, list)
     ids = {p["id"] for p in data}
-    expected = {"xoks-pro-elite", "xoks-carbon-blue", "xoks-stealth-ankle", "xoks-game"}
+    expected = {"xoks-pro-elite", "xoks-carbon-blue", "xoks-stealth-ankle", "xoks-game", "xoks-carbon-plain"}
     assert expected.issubset(ids), f"Missing seeded products: {expected - ids}"
-    # baseline should be exactly 4 active
-    assert len([p for p in data if p.get("active", True)]) == 4
+    # baseline should be exactly 5 active
+    assert len([p for p in data if p.get("active", True)]) == 5
+
+
+def test_xoks_carbon_plain_details(session):
+    r = session.get(f"{API}/products/xoks-carbon-plain")
+    assert r.status_code == 200
+    p = r.json()
+    assert p["id"] == "xoks-carbon-plain"
+    assert p["name"] == "Caneleiras XOK'S Carbon Plain"
+    assert p["tagline"] == "Plain Weave"
+    assert p["price"] == 44.90
+    assert p["image_bg"] == "light"
+    assert p["image"] == "/carbon-plain-v1.png"
+    assert set(p["sizes"]) == {"S", "M", "L", "XL"}
+    specs = p.get("specs", [])
+    assert "Carbono Tafetán (Plain Weave)" in specs
+    assert "Camada protetora anti-riscos" in specs
+    assert "Peso ultraleve" in specs
+    assert p.get("colors", []) == []
+
+
+def test_carbon_plain_image_reachable(session):
+    url = f"{BASE_URL}/carbon-plain-v1.png"
+    r = session.get(url)
+    assert r.status_code == 200, f"{url} -> {r.status_code}"
+    assert r.headers.get("content-type", "").startswith("image/"), url
+
+
+def test_dark_products_remain_dark(session):
+    for pid in ["xoks-pro-elite", "xoks-carbon-blue", "xoks-stealth-ankle"]:
+        r = session.get(f"{API}/products/{pid}")
+        assert r.status_code == 200
+        p = r.json()
+        assert p.get("image_bg") != "light", f"{pid} should not be light, got {p.get('image_bg')}"
 
 
 def test_get_product_xoks_game(session):

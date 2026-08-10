@@ -24,6 +24,7 @@ const EMPTY = {
   badge: "",
   featured: false,
   active: true,
+  image_bg: "light",
 };
 
 const Input = ({ label, ...props }) => (
@@ -82,6 +83,7 @@ export const AdminProducts = () => {
       badge: p.badge || "",
       featured: !!p.featured,
       active: p.active !== false,
+      image_bg: p.image_bg === "light" ? "light" : "dark",
     });
     setOpen(true);
   };
@@ -108,6 +110,7 @@ export const AdminProducts = () => {
       badge: form.badge || null,
       featured: form.featured,
       active: form.active,
+      image_bg: form.image_bg,
     };
     try {
       if (editing) {
@@ -228,6 +231,10 @@ export const AdminProducts = () => {
               <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" checked={form.active} onChange={(e) => set("active", e.target.checked)} className="w-4 h-4 accent-[#7EDAF2]" data-testid="pf-active" />
                 <span className="text-sm text-zinc-300">Ativo</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={form.image_bg === "light"} onChange={(e) => set("image_bg", e.target.checked ? "light" : "dark")} className="w-4 h-4 accent-[#7EDAF2]" data-testid="pf-lightbg" />
+                <span className="text-sm text-zinc-300">Fundo branco</span>
               </label>
             </div>
           </div>
