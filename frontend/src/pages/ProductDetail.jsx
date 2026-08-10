@@ -4,6 +4,7 @@ import { ChevronRight } from "lucide-react";
 import { api } from "@/lib/api";
 import { Navigation } from "@/components/Navigation";
 import { ProductShowcase } from "@/components/ProductShowcase";
+import { Reviews } from "@/components/Reviews";
 import { Footer } from "@/components/Footer";
 import { CartSheet } from "@/components/CartSheet";
 
@@ -44,6 +45,7 @@ export default function ProductDetail() {
       ) : (
         <ProductShowcase product={product} />
       )}
+      {product && !notFound && <Reviews />}
       <Footer />
     </div>
   );

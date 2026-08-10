@@ -48,7 +48,7 @@ export const ProductGrid = ({ products, hideHeader = false }) => {
                 to={`/produto/${p.id}`}
                 className="group block rounded-2xl border border-white/10 bg-[#121212] overflow-hidden hover:border-[#7EDAF2]/40 transition-colors h-full flex flex-col"
               >
-                <div className={`relative aspect-square flex items-center justify-center overflow-hidden ${p.image_bg === "light" ? "bg-white" : "bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a]"}`}>
+                <div style={p.image_bg === "light" ? { backgroundColor: "#FEFEFE" } : undefined} className={`relative aspect-square flex items-center justify-center overflow-hidden ${p.image_bg === "light" ? "" : "bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a]"}`}>
                   {p.badge && (
                     <span className="absolute top-4 left-4 z-10 bg-[#7EDAF2] text-black text-xs font-bold uppercase px-3 py-1 rounded-full tracking-wide">
                       {p.badge}
@@ -57,7 +57,7 @@ export const ProductGrid = ({ products, hideHeader = false }) => {
                   <img
                     src={p.image}
                     alt={p.name}
-                    className="w-[80%] h-[80%] object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500"
+                    className={`w-[80%] h-[80%] object-contain group-hover:scale-105 transition-transform duration-500 ${p.image_bg === "light" ? "" : "drop-shadow-2xl"}`}
                   />
                   <button
                     data-testid={`quick-add-${p.id}`}

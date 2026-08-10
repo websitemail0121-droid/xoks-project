@@ -50,7 +50,7 @@ export const ProductShowcase = ({ product }) => {
           transition={{ duration: 0.6 }}
           className="lg:sticky lg:top-24"
         >
-          <div className={`relative rounded-3xl overflow-hidden border border-white/10 aspect-square flex items-center justify-center ${lightBg ? "bg-white" : "bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a]"}`}>
+          <div style={lightBg ? { backgroundColor: "#FEFEFE" } : undefined} className={`relative rounded-3xl overflow-hidden border border-white/10 aspect-square flex items-center justify-center ${lightBg ? "" : "bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a]"}`}>
             {product.badge && (
               <div className="absolute top-5 left-5 z-10 bg-[#7EDAF2] text-black text-xs font-bold uppercase px-3 py-1 rounded-full tracking-wide">
                 {product.badge}
@@ -60,7 +60,7 @@ export const ProductShowcase = ({ product }) => {
               data-testid="product-main-image"
               src={gallery[activeImg]}
               alt={product.name}
-              className="w-[85%] h-[85%] object-contain drop-shadow-2xl"
+              className={`w-[85%] h-[85%] object-contain ${lightBg ? "" : "drop-shadow-2xl"}`}
             />
           </div>
           {gallery.length > 1 && (
@@ -70,9 +70,10 @@ export const ProductShowcase = ({ product }) => {
                   key={i}
                   data-testid={`product-thumb-${i}`}
                   onClick={() => setActiveImg(i)}
-                  className={`w-20 h-20 rounded-xl overflow-hidden border transition-colors ${lightBg ? "bg-white" : "bg-[#151515]"} ${
+                  className={`w-20 h-20 rounded-xl overflow-hidden border transition-colors ${lightBg ? "" : "bg-[#151515]"} ${
                     activeImg === i ? "border-[#7EDAF2]" : "border-white/10 hover:border-white/30"
                   }`}
+                  style={lightBg ? { backgroundColor: "#FEFEFE" } : undefined}
                 >
                   <img src={g} alt="" className="w-full h-full object-contain p-1" />
                 </button>

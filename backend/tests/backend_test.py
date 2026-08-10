@@ -54,10 +54,21 @@ def test_get_product_xoks_game(session):
 
 def test_xoks_game_images_reachable(session):
     for color in ["blue", "yellow", "orange", "green"]:
-        url = f"{BASE_URL}/game-{color}.png"
+        url = f"{BASE_URL}/game-{color}-v2.png"
         r = session.get(url)
         assert r.status_code == 200, f"{url} -> {r.status_code}"
         assert r.headers.get("content-type", "").startswith("image/"), url
+
+
+def test_xoks_game_image_bg_light_and_v2(session):
+    r = session.get(f"{API}/products/xoks-game")
+    assert r.status_code == 200
+    p = r.json()
+    assert p.get("image_bg") == "light"
+    assert p["image"] == "/game-blue-v2.png"
+    assert p["gallery"] == ["/game-blue-v2.png", "/game-yellow-v2.png", "/game-orange-v2.png", "/game-green-v2.png"]
+    for c in p["colors"]:
+        assert c["image"].endswith("-v2.png")
 
 
 def test_get_product_by_id(session):
