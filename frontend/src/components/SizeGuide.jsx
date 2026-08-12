@@ -10,13 +10,21 @@ import {
 } from "@/components/ui/dialog";
 
 const rows = [
+  { size: "XS", height: "11,5 cm", calf: "28 – 32 cm", use: "Crianças / pernas muito finas" },
   { size: "S", height: "13 cm", calf: "32 – 35 cm", use: "Jovens / adultos magros" },
   { size: "M", height: "15 cm", calf: "35 – 38 cm", use: "Adulto (mais comum)" },
   { size: "L", height: "17 cm", calf: "38 – 42 cm", use: "Adultos com pernas fortes" },
   { size: "XL", height: "19 cm", calf: "42 – 46 cm", use: "Pernas muito musculadas" },
 ];
 
-export const SizeGuide = ({ trigger }) => {
+const steps = [
+  "Fica de pé com a perna relaxada.",
+  "Mede a parte mais larga do gémeo com uma fita métrica.",
+  "Consulta a tabela e escolhe o tamanho que melhor se adapta a ti.",
+];
+
+export const SizeGuide = ({ trigger, showXS = true, productName = "XOK'S" }) => {
+  const data = showXS ? rows : rows.filter((r) => r.size !== "XS");
   return (
     <Dialog>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -26,10 +34,10 @@ export const SizeGuide = ({ trigger }) => {
       >
         <DialogHeader>
           <DialogTitle className="font-display text-3xl uppercase tracking-wide">
-            Guia de Tamanhos <span className="text-[#7EDAF2]">XOK'S Game</span>
+            Tabela de Perímetro <span className="text-[#7EDAF2]">de Pernas</span>
           </DialogTitle>
           <DialogDescription className="text-zinc-400">
-            Encontra o tamanho ideal com base na altura da caneleira e no perímetro do gémeo.
+            Encontra o tamanho ideal das tuas caneleiras {productName} com base na altura e no perímetro do gémeo.
           </DialogDescription>
         </DialogHeader>
 
@@ -41,7 +49,7 @@ export const SizeGuide = ({ trigger }) => {
             <div className="p-3 flex items-center gap-1.5"><CircleDot className="w-3.5 h-3.5 text-[#7EDAF2]" /> Perímetro (gémeo)</div>
             <div className="p-3 flex items-center gap-1.5"><Target className="w-3.5 h-3.5 text-[#7EDAF2]" /> Recomendado</div>
           </div>
-          {rows.map((r, i) => (
+          {data.map((r, i) => (
             <div
               key={r.size}
               data-testid={`size-row-${r.size}`}
@@ -54,9 +62,19 @@ export const SizeGuide = ({ trigger }) => {
             </div>
           ))}
         </div>
-        <p className="text-xs text-zinc-500 mt-1">
-          Medições aproximadas. Em caso de dúvida entre dois tamanhos, escolhe o maior.
-        </p>
+
+        {/* how to measure */}
+        <div className="mt-1">
+          <p className="text-xs font-bold uppercase tracking-wide text-zinc-400 mb-2">Como medir</p>
+          <ol className="space-y-1.5">
+            {steps.map((s, i) => (
+              <li key={i} className="flex items-start gap-2.5 text-sm text-zinc-300">
+                <span className="shrink-0 w-5 h-5 rounded-full bg-[#7EDAF2] text-black text-xs font-bold flex items-center justify-center">{i + 1}</span>
+                {s}
+              </li>
+            ))}
+          </ol>
+        </div>
       </DialogContent>
     </Dialog>
   );

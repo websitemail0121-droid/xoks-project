@@ -11,6 +11,12 @@ import Parcerias from "@/pages/Parcerias";
 import Checkout from "@/pages/Checkout";
 import OrderSuccess from "@/pages/OrderSuccess";
 import AdminOrders from "@/pages/AdminOrders";
+import Termos from "@/pages/legal/Termos";
+import Privacidade from "@/pages/legal/Privacidade";
+import Cookies from "@/pages/legal/Cookies";
+import Envios from "@/pages/legal/Envios";
+import Devolucoes from "@/pages/legal/Devolucoes";
+import AvisoLegal from "@/pages/legal/AvisoLegal";
 
 function App() {
   return (
@@ -27,6 +33,12 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/sucesso/:orderNumber" element={<OrderSuccess />} />
             <Route path="/admin" element={<AdminOrders />} />
+            <Route path="/termos-e-condicoes" element={<Termos />} />
+            <Route path="/politica-de-privacidade" element={<Privacidade />} />
+            <Route path="/politica-de-cookies" element={<Cookies />} />
+            <Route path="/politica-de-envios" element={<Envios />} />
+            <Route path="/politica-de-devolucoes" element={<Devolucoes />} />
+            <Route path="/aviso-legal" element={<AvisoLegal />} />
           </Routes>
         </BrowserRouter>
         <Toaster position="top-right" theme="dark" richColors />

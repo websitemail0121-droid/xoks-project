@@ -2,6 +2,7 @@ import React from "react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { CartSheet } from "@/components/CartSheet";
+import { CookieConsent } from "@/components/CookieConsent";
 
 export const Layout = ({ children }) => {
   return (
@@ -10,6 +11,7 @@ export const Layout = ({ children }) => {
       <CartSheet />
       <main className="flex-1">{children}</main>
       <Footer />
+      <CookieConsent />
     </div>
   );
 };

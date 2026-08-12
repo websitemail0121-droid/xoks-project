@@ -1,0 +1,17 @@
+{
+  "summary": "Full retest of new baseline (4 products, XS size guide rules). Backend: rewrote backend_test.py for the new baseline; 19/19 tests pass. Frontend: verified /produtos grid shows exactly the 4 expected cards (xoks-game, xoks-carbon-plain, xoks-carbon-twill, xoks-carbon-fusion) with white image panels; product detail pages for Carbon Twill and Carbon Fusion show correct name/price/specs; SizeGuide includes size-row-XS + S/M/L/XL and a 'Como medir' section for both; xoks-game guide correctly omits size-row-XS (only S/M/L/XL). Full checkout flow (add to cart -> checkout-btn -> /checkout -> place-order-btn -> /sucesso/XOKS-1003) succeeded with no console errors.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": ["/app/backend/tests/backend_test.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py seed() uses insert_many only when empty; on subsequent runs it only $setOnInsert. Since old products (xoks-pro-elite/carbon-blue/stealth-ankle) were manually removed from DB this iteration, seed will never re-introduce them and never remove stale docs. Consider making seed idempotent (delete stale ids or full replace) so future rename/removal cycles don't require manual DB cleanup.",
+    "Carbon Plain per task note should also have XS sizes + full guide row - server.py still lists sizes S,M,L,XL for xoks-carbon-plain. Frontend size guide will show XS row (since showXS is true for non-game) but the product itself has no XS size option. Minor inconsistency - main agent to decide whether to add XS to xoks-carbon-plain.sizes."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py"],
+  "success_rate": {"backend": "100% (19/19)", "frontend": "100% key flows"},
+  "seed_data_creation": "Created 1 test order (XOKS-1003) and 1 test partnership + 1 TEST_ product (created+deleted within test). Orders/partnerships have no DELETE endpoint so residuals remain but are marked TEST_.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Baseline: 4 products, all image_bg=light. xoks-game sizes S,M,L,XL (no XS in guide). xoks-carbon-plain S,M,L,XL (guide shows XS - see review comment). xoks-carbon-twill and xoks-carbon-fusion have XS,S,M,L,XL. Removed products (pro-elite/carbon-blue/stealth-ankle) return 404 as required."
+}

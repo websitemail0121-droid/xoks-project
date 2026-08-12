@@ -150,6 +150,8 @@ export const ProductShowcase = ({ product }) => {
             <div className="flex items-center justify-between">
               <span className="text-sm font-semibold text-zinc-400 uppercase tracking-wide">Tamanho</span>
               <SizeGuide
+                showXS={product.id !== "xoks-game"}
+                productName={product.name?.replace("Caneleiras ", "") || "XOK'S"}
                 trigger={
                   <button
                     data-testid="size-guide-btn"
