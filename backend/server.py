@@ -253,8 +253,8 @@ SEED_PRODUCTS = [
         "image": "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/28apeztn_45d0f583-8586-47e2-bf96-0eb8cbe770b7.png",
         "gallery": [
             "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/28apeztn_45d0f583-8586-47e2-bf96-0eb8cbe770b7.png",
-            "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/6tvtkf70_e33ff91f-da20-4c04-80ec-7ea94cf3af6c.png",
-            "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/1tpyh7df_026a5e35-f7e2-406d-b267-713927f09390.png",
+            "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/u0y3csq1_Captura%20de%20ecr%C3%A3%202026-08-24%20185236.png",
+            "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/n7vzt85s_Captura%20de%20ecr%C3%A3%202026-08-24%20184908.png",
         ],
         "colors": [],
         "image_bg": "light",
