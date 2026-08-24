@@ -80,6 +80,13 @@ export const CartSheet = () => {
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm leading-tight">{item.name}</p>
                     {item.size && <p className="text-xs text-zinc-500 mt-0.5">Tamanho {item.size}</p>}
+                    {item.custom_data && (
+                      <div className="mt-1 text-[11px] text-[#7EDAF2] font-semibold uppercase tracking-wide">
+                        Custom · {item.custom_data.carbon || ""}
+                        {item.custom_data.player_name ? ` · ${item.custom_data.player_name}` : ""}
+                        {item.custom_data.player_number ? ` #${item.custom_data.player_number}` : ""}
+                      </div>
+                    )}
                     <div className="flex items-center justify-between mt-2">
                       <div className="flex items-center border border-white/15 rounded-full">
                         <button

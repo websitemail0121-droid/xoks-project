@@ -19,6 +19,8 @@ import Devolucoes from "@/pages/legal/Devolucoes";
 import AvisoLegal from "@/pages/legal/AvisoLegal";
 import PaymentSuccess from "@/pages/PaymentSuccess";
 import PaymentCancel from "@/pages/PaymentCancel";
+import CustomStudio from "@/pages/CustomStudio";
+import CustomStudioBuild from "@/pages/CustomStudioBuild";
 
 function App() {
   return (
@@ -43,6 +45,8 @@ function App() {
             <Route path="/aviso-legal" element={<AvisoLegal />} />
             <Route path="/payment/success" element={<PaymentSuccess />} />
             <Route path="/payment/cancel" element={<PaymentCancel />} />
+            <Route path="/custom-studio" element={<CustomStudio />} />
+            <Route path="/custom-studio/build" element={<CustomStudioBuild />} />
           </Routes>
         </BrowserRouter>
         <Toaster position="top-right" theme="dark" richColors />

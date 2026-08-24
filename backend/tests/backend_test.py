@@ -5,7 +5,8 @@ import requests
 BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://xoks-shin-guards.preview.emergentagent.com').rstrip('/')
 API = f"{BASE_URL}/api"
 
-EXPECTED_IDS = {"xoks-game", "xoks-carbon-plain", "xoks-carbon-twill", "xoks-carbon-fusion"}
+EXPECTED_IDS = {"xoks-game", "xoks-carbon-plain", "xoks-carbon-twill", "xoks-carbon-fusion",
+                "xoks-carbon-legacy", "studio-base", "studio-pro"}
 REMOVED_IDS = {"xoks-pro-elite", "xoks-carbon-blue", "xoks-stealth-ankle"}
 
 
@@ -16,8 +17,8 @@ def session():
     return s
 
 
-# ---------- Products: baseline (exactly 4) ----------
-def test_get_products_returns_exactly_4(session):
+# ---------- Products: baseline (7 products incl. Custom Studio) ----------
+def test_get_products_returns_expected_baseline(session):
     r = session.get(f"{API}/products")
     assert r.status_code == 200
     data = r.json()

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { api } from "@/lib/api";
 import { Navigation } from "@/components/Navigation";
@@ -12,6 +12,7 @@ export default function ProductDetail() {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [notFound, setNotFound] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setProduct(null);
@@ -19,9 +20,17 @@ export default function ProductDetail() {
     window.scrollTo(0, 0);
     api
       .get(`/products/${productId}`)
-      .then((res) => setProduct(res.data))
+      .then((res) => {
+        const p = res.data;
+        if (p.product_type === "custom") {
+          const tier = p.id === "studio-pro" ? "pro" : "base";
+          navigate(`/custom-studio/build?tier=${tier}`, { replace: true });
+          return;
+        }
+        setProduct(p);
+      })
       .catch(() => setNotFound(true));
-  }, [productId]);
+  }, [productId, navigate]);
 
   return (
     <div className="bg-[#0A0A0A] min-h-screen">

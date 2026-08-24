@@ -8,6 +8,7 @@ import { toast } from "sonner";
 
 export const ProductGrid = ({ products, hideHeader = false }) => {
   const { addItem } = useCart();
+  const displayProducts = products.filter((p) => p.product_type !== "custom");
 
   const quickAdd = (e, p) => {
     e.preventDefault();
@@ -35,7 +36,7 @@ export const ProductGrid = ({ products, hideHeader = false }) => {
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((p, i) => (
+          {displayProducts.map((p, i) => (
             <motion.div
               key={p.id}
               data-testid={`product-card-${p.id}`}

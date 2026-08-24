@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { RefreshCw, Package, TrendingUp, Clock, ArrowLeft } from "lucide-react";
-import { api, formatPrice } from "@/lib/api";
+import { api, resolveUrl, formatPrice } from "@/lib/api";
 import {
   Select,
   SelectContent,
@@ -139,9 +139,33 @@ const OrdersPanel = () => {
                     <div>
                       <p className="text-zinc-500 uppercase text-xs font-bold mb-2">Artigos</p>
                       {o.items.map((it, i) => (
-                        <div key={i} className="flex justify-between text-zinc-300 py-1">
-                          <span>{it.quantity}× {it.name}{it.size ? ` (${it.size})` : ""}</span>
-                          <span>{formatPrice(it.price * it.quantity)}</span>
+                        <div key={i} className="py-1.5">
+                          <div className="flex justify-between text-zinc-300">
+                            <span>{it.quantity}× {it.name}{it.size ? ` (${it.size})` : ""}</span>
+                            <span>{formatPrice(it.price * it.quantity)}</span>
+                          </div>
+                          {it.custom_data && (
+                            <div className="mt-1 ml-4 rounded-md bg-[#7EDAF2]/[0.05] border border-[#7EDAF2]/20 p-2.5 text-xs space-y-1">
+                              <div className="text-[10px] font-bold uppercase tracking-widest text-[#7EDAF2]">Custom Studio</div>
+                              <div><span className="text-zinc-400">Carbono:</span> <span className="text-white">{it.custom_data.carbon}</span></div>
+                              {it.custom_data.player_name && (
+                                <div><span className="text-zinc-400">Nome:</span> <span className="text-white">{it.custom_data.player_name}</span></div>
+                              )}
+                              {it.custom_data.player_number && (
+                                <div><span className="text-zinc-400">Número:</span> <span className="text-white">#{it.custom_data.player_number}</span></div>
+                              )}
+                              {it.custom_data.notes && (
+                                <div><span className="text-zinc-400">Observações:</span> <span className="text-zinc-200 italic">{it.custom_data.notes}</span></div>
+                              )}
+                              <div className="flex flex-wrap gap-2 pt-1.5">
+                                {it.custom_data.photo_left && <a href={resolveUrl(it.custom_data.photo_left)} target="_blank" rel="noreferrer" className="text-[#7EDAF2] hover:underline text-[11px]" data-testid={`admin-photo-left-${i}`}>▸ Foto esquerda</a>}
+                                {it.custom_data.photo_right && it.custom_data.photo_right !== it.custom_data.photo_left && <a href={resolveUrl(it.custom_data.photo_right)} target="_blank" rel="noreferrer" className="text-[#7EDAF2] hover:underline text-[11px]">▸ Foto direita</a>}
+                                {(it.custom_data.photo_extras || []).map((u, k) => (
+                                  <a key={k} href={resolveUrl(u)} target="_blank" rel="noreferrer" className="text-[#7EDAF2] hover:underline text-[11px]">▸ Extra {k + 1}</a>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       ))}
                       <div className="flex justify-between text-white font-bold pt-2 mt-1 border-t border-white/10">

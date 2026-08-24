@@ -20,10 +20,13 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items]);
 
-  const addItem = useCallback((product, size, quantity = 1) => {
+  const addItem = useCallback((product, size, quantity = 1, extras = {}) => {
     setItems((prev) => {
-      const key = `${product.id}-${size || "std"}`;
-      const existing = prev.find((i) => i.key === key);
+      const { custom_data, price: overridePrice, image: overrideImage, name: overrideName } = extras || {};
+      // Custom items get a unique key (never merged with existing lines)
+      const uniqueKey = custom_data ? `${product.id}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}` : null;
+      const key = uniqueKey || `${product.id}-${size || "std"}`;
+      const existing = !custom_data && prev.find((i) => i.key === key);
       if (existing) {
         return prev.map((i) =>
           i.key === key ? { ...i, quantity: i.quantity + quantity } : i
@@ -34,11 +37,12 @@ export const CartProvider = ({ children }) => {
         {
           key,
           product_id: product.id,
-          name: product.name,
+          name: overrideName || product.name,
           size: size || null,
-          price: product.price,
+          price: overridePrice !== undefined ? overridePrice : product.price,
           quantity,
-          image: product.image,
+          image: overrideImage || product.image,
+          custom_data: custom_data || null,
         },
       ];
     });

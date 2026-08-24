@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Request
+from fastapi import FastAPI, APIRouter, HTTPException, Request, UploadFile, File, Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -6,10 +6,11 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime, timezone
 import stripe
+import requests
 
 
 ROOT_DIR = Path(__file__).parent
@@ -21,6 +22,13 @@ db = client[os.environ['DB_NAME']]
 
 stripe.api_key = os.environ.get("STRIPE_SECRET_KEY") or "sk_test_emergent"
 STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
+
+# ---- Emergent Object Storage ----
+STORAGE_BASE = (os.environ.get("INTEGRATION_PROXY_URL") or "").strip() or "https://integrations.emergentagent.com"
+STORAGE_URL = STORAGE_BASE.rstrip("/") + "/objstore/api/v1/storage"
+EMERGENT_KEY = os.environ.get("EMERGENT_LLM_KEY")
+APP_NAME = "xoks-shin-guards"
+_storage_key: Optional[str] = None
 
 SHIPPING_COST = 4.99
 FREE_SHIPPING_THRESHOLD = 60.0
@@ -38,6 +46,61 @@ def now_iso() -> str:
 
 def gen_id() -> str:
     return str(uuid.uuid4())
+
+
+# ---------- Emergent Object Storage helpers ----------
+def init_storage(force: bool = False) -> Optional[str]:
+    global _storage_key
+    if _storage_key and not force:
+        return _storage_key
+    if not EMERGENT_KEY:
+        return None
+    try:
+        resp = requests.post(f"{STORAGE_URL}/init", json={"emergent_key": EMERGENT_KEY}, timeout=30)
+        resp.raise_for_status()
+        _storage_key = resp.json()["storage_key"]
+        return _storage_key
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Storage init failed: {e}")
+        return None
+
+
+def put_object(path: str, data: bytes, content_type: str) -> dict:
+    key = init_storage()
+    if not key:
+        raise HTTPException(status_code=500, detail="Storage indisponível")
+    resp = requests.put(
+        f"{STORAGE_URL}/objects/{path}",
+        headers={"X-Storage-Key": key, "Content-Type": content_type},
+        data=data, timeout=120
+    )
+    if resp.status_code == 404:
+        key = init_storage(force=True)
+        resp = requests.put(
+            f"{STORAGE_URL}/objects/{path}",
+            headers={"X-Storage-Key": key, "Content-Type": content_type},
+            data=data, timeout=120
+        )
+    resp.raise_for_status()
+    return resp.json()
+
+
+def get_object(path: str) -> tuple[bytes, str]:
+    key = init_storage()
+    if not key:
+        raise HTTPException(status_code=500, detail="Storage indisponível")
+    resp = requests.get(
+        f"{STORAGE_URL}/objects/{path}",
+        headers={"X-Storage-Key": key}, timeout=60
+    )
+    if resp.status_code == 404:
+        key = init_storage(force=True)
+        resp = requests.get(
+            f"{STORAGE_URL}/objects/{path}",
+            headers={"X-Storage-Key": key}, timeout=60
+        )
+    resp.raise_for_status()
+    return resp.content, resp.headers.get("Content-Type", "application/octet-stream")
 
 
 # ---------- Models ----------
@@ -63,6 +126,8 @@ class ProductBase(BaseModel):
     badge: Optional[str] = None
     featured: bool = False
     active: bool = True
+    section: str = "collection"  # "collection" | "carbon" | "custom"
+    product_type: str = "standard"  # "standard" | "custom"
 
 
 class Product(ProductBase):
@@ -110,6 +175,7 @@ class CartItem(BaseModel):
     price: float
     quantity: int
     image: Optional[str] = None
+    custom_data: Optional[Dict[str, Any]] = None
 
 
 class ShippingInfo(BaseModel):
@@ -186,6 +252,7 @@ SEED_PRODUCTS = [
         "sizes": ["S", "M", "L", "XL"],
         "badge": "Novo",
         "featured": True,
+        "section": "collection",
     },
     {
         "id": "xoks-carbon-plain",
@@ -205,6 +272,7 @@ SEED_PRODUCTS = [
         "sizes": ["XS", "S", "M", "L", "XL"],
         "badge": "Novo",
         "featured": True,
+        "section": "carbon",
     },
     {
         "id": "xoks-carbon-twill",
@@ -224,6 +292,7 @@ SEED_PRODUCTS = [
         "sizes": ["XS", "S", "M", "L", "XL"],
         "badge": "Novo",
         "featured": True,
+        "section": "carbon",
     },
     {
         "id": "xoks-carbon-fusion",
@@ -243,6 +312,7 @@ SEED_PRODUCTS = [
         "sizes": ["XS", "S", "M", "L", "XL"],
         "badge": "Pro",
         "featured": True,
+        "section": "carbon",
     },
     {
         "id": "xoks-carbon-legacy",
@@ -266,6 +336,51 @@ SEED_PRODUCTS = [
         "sizes": ["XS", "S", "M", "L", "XL"],
         "badge": "Edição Limitada",
         "featured": True,
+        "section": "collection",
+    },
+    {
+        "id": "studio-base",
+        "name": "Studio Base",
+        "tagline": "Design Your Identity",
+        "description": "Cria umas caneleiras únicas com o teu nome, número e fotografias. Cada par é montado à mão e enviado o preview para o teu email num prazo de 48 horas para aprovação antes da produção.",
+        "price": 92.90,
+        "image": "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/ql0rqrsp_Captura%20de%20ecr%C3%A3%202026-08-24%20191243.png",
+        "gallery": [],
+        "colors": [],
+        "image_bg": "light",
+        "specs": [
+            "Até 2 fotografias",
+            "Nome + número personalizados",
+            "Preview do design em 48h",
+            "Design sujeito à tua aprovação",
+        ],
+        "sizes": ["XS", "S", "M", "L", "XL"],
+        "badge": "Custom",
+        "featured": True,
+        "section": "custom",
+        "product_type": "custom",
+    },
+    {
+        "id": "studio-pro",
+        "name": "Studio Pro",
+        "tagline": "Design Your Identity",
+        "description": "A versão avançada do Custom Studio: até 4 fotografias, nome e número personalizados com acabamentos exclusivos. Preview do design entregue por email em 48h para aprovação antes de produzirmos.",
+        "price": 99.90,
+        "image": "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/mk5elhi1_Captura%20de%20ecr%C3%A3%202026-08-24%20192818.png",
+        "gallery": [],
+        "colors": [],
+        "image_bg": "light",
+        "specs": [
+            "Até 4 fotografias",
+            "Nome + número personalizados",
+            "Acabamentos premium exclusivos",
+            "Preview do design em 48h",
+        ],
+        "sizes": ["XS", "S", "M", "L", "XL"],
+        "badge": "Pro Custom",
+        "featured": True,
+        "section": "custom",
+        "product_type": "custom",
     },
 ]
 
@@ -288,6 +403,16 @@ async def seed():
                 {"id": p["id"]},
                 {"$setOnInsert": dict(p)},
                 upsert=True,
+            )
+        # Migrate: ensure section + product_type exist on all products
+        for p in SEED_PRODUCTS:
+            await db.products.update_one(
+                {"id": p["id"], "$or": [{"section": {"$exists": False}}, {"section": None}]},
+                {"$set": {"section": p.get("section", "collection")}},
+            )
+            await db.products.update_one(
+                {"id": p["id"], "$or": [{"product_type": {"$exists": False}}, {"product_type": None}]},
+                {"$set": {"product_type": p.get("product_type", "standard")}},
             )
     if await db.athletes.count_documents({}) == 0:
         await db.athletes.insert_many([dict(a) for a in SEED_ATHLETES])
@@ -340,6 +465,53 @@ async def delete_product(product_id: str):
     if res.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Produto não encontrado")
     return {"deleted": True}
+
+
+# ---------- File upload (Emergent Object Storage) ----------
+ALLOWED_UPLOAD_TYPES = {"image/jpeg", "image/jpg", "image/png", "image/webp"}
+MAX_UPLOAD_BYTES = 8 * 1024 * 1024  # 8MB
+
+
+@api_router.post("/uploads/custom-photo")
+async def upload_custom_photo(file: UploadFile = File(...)):
+    ext = (file.filename or "").rsplit(".", 1)[-1].lower() if file.filename and "." in file.filename else "bin"
+    if ext == "jpg":
+        ext = "jpeg"
+    content_type = file.content_type or f"image/{ext}"
+    if content_type not in ALLOWED_UPLOAD_TYPES:
+        raise HTTPException(status_code=400, detail="Só aceitamos JPG ou PNG")
+    data = await file.read()
+    if len(data) > MAX_UPLOAD_BYTES:
+        raise HTTPException(status_code=400, detail="Ficheiro demasiado grande (máx. 8MB)")
+    file_id = gen_id()
+    path = f"{APP_NAME}/custom-orders/{file_id}.{ext}"
+    result = put_object(path, data, content_type)
+    await db.files.insert_one({
+        "id": file_id,
+        "storage_path": result["path"],
+        "original_filename": file.filename or f"{file_id}.{ext}",
+        "content_type": content_type,
+        "size": result.get("size", len(data)),
+        "is_deleted": False,
+        "created_at": now_iso(),
+    })
+    backend_base = os.environ.get("PUBLIC_BACKEND_URL") or ""
+    file_url = f"/api/uploads/file/{file_id}"
+    return {
+        "id": file_id,
+        "url": file_url,
+        "content_type": content_type,
+        "size": result.get("size", len(data)),
+    }
+
+
+@api_router.get("/uploads/file/{file_id}")
+async def download_custom_photo(file_id: str):
+    record = await db.files.find_one({"id": file_id, "is_deleted": False})
+    if not record:
+        raise HTTPException(status_code=404, detail="Ficheiro não encontrado")
+    data, ct = get_object(record["storage_path"])
+    return Response(content=data, media_type=record.get("content_type", ct))
 
 
 # ---------- Athlete routes ----------
@@ -467,14 +639,38 @@ async def create_checkout(payload: CheckoutRequest):
         product = await db.products.find_one({"id": it.product_id}, {"_id": 0})
         if not product:
             raise HTTPException(status_code=400, detail=f"Produto inválido: {it.name}")
-        unit_price = float(product["price"])
+
+        is_custom = product.get("product_type") == "custom"
+        if is_custom:
+            # Validate custom price server-side against known carbon tiers
+            base_price = float(product["price"])
+            carbon = (it.custom_data or {}).get("carbon", "plain")
+            carbon_delta = {"plain": 0.0, "twill": 5.0, "fusion": 10.0}.get(carbon, 0.0)
+            unit_price = round(base_price + carbon_delta, 2)
+            player_name = (it.custom_data or {}).get("player_name") or ""
+            player_number = (it.custom_data or {}).get("player_number") or ""
+            display_name = product["name"]
+            extras = []
+            if player_name:
+                extras.append(player_name)
+            if player_number:
+                extras.append(f"#{player_number}")
+            if extras:
+                display_name += " · " + " ".join(extras)
+            if carbon:
+                display_name += f" · {carbon.capitalize()}"
+            if it.size:
+                display_name += f" · Tam. {it.size}"
+        else:
+            unit_price = float(product["price"])
+            display_name = product["name"] + (f" · Tam. {it.size}" if it.size else "")
+
         qty = max(1, int(it.quantity))
         subtotal += unit_price * qty
-        display_name = product["name"] + (f" · Tam. {it.size}" if it.size else "")
         line_items.append({
             "price_data": {
                 "currency": "eur",
-                "product_data": {"name": display_name},
+                "product_data": {"name": display_name[:250]},
                 "unit_amount": int(round(unit_price * 100)),
             },
             "quantity": qty,
@@ -482,6 +678,7 @@ async def create_checkout(payload: CheckoutRequest):
         verified_items.append(CartItem(
             product_id=it.product_id, name=product["name"], size=it.size,
             price=unit_price, quantity=qty, image=product.get("image"),
+            custom_data=it.custom_data if is_custom else None,
         ))
 
     shipping_cost = 0.0 if subtotal >= FREE_SHIPPING_THRESHOLD else SHIPPING_COST
@@ -593,6 +790,11 @@ async def stripe_webhook(request: Request):
 @app.on_event("startup")
 async def on_startup():
     await seed()
+    try:
+        init_storage()
+        logger.info("Storage initialized")
+    except Exception as e:
+        logger.error(f"Storage init failed: {e}")
 
 
 app.include_router(api_router)

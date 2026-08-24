@@ -58,13 +58,14 @@ export default function Checkout() {
     setSubmitting(true);
     try {
       const payload = {
-        items: items.map(({ product_id, name, size, price, quantity, image }) => ({
+        items: items.map(({ product_id, name, size, price, quantity, image, custom_data }) => ({
           product_id,
           name,
           size,
           price,
           quantity,
           image,
+          custom_data: custom_data || null,
         })),
         shipping,
         billing: sameAsShipping

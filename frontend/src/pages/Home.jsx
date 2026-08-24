@@ -8,6 +8,7 @@ import { AthleteCarousel } from "@/components/AthleteCarousel";
 import { SocialProof } from "@/components/SocialProof";
 import { Footer } from "@/components/Footer";
 import { CartSheet } from "@/components/CartSheet";
+import { CustomStudioTeaser } from "@/components/CustomStudioTeaser";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -31,6 +32,7 @@ export default function Home() {
         <Hero onCta={handleHeroCta} />
         <ValueProposition />
         <ProductGrid products={products} />
+        <CustomStudioTeaser />
         <AthleteCarousel athletes={athletes} />
         <SocialProof />
       </main>

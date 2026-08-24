@@ -5,6 +5,7 @@ import { useCart } from "@/context/CartContext";
 
 const links = [
   { to: "/produtos", label: "Produtos" },
+  { to: "/custom-studio", label: "Custom Studio" },
   { to: "/atletas", label: "Atletas" },
   { to: "/sobre", label: "Sobre Nós" },
   { to: "/parcerias", label: "Parcerias" },
