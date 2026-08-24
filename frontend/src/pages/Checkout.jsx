@@ -70,20 +70,17 @@ export default function Checkout() {
         billing: sameAsShipping
           ? { same_as_shipping: true }
           : { same_as_shipping: false, ...billing },
-        subtotal,
-        shipping_cost: shippingCost,
-        total,
         notes: notes || null,
+        origin_url: window.location.origin,
       };
-      const res = await api.post("/orders", payload);
-      clearCart();
-      navigate(`/sucesso/${res.data.order_number}`);
+      const res = await api.post("/checkout", payload);
+      // Redirect to Stripe hosted checkout
+      window.location.href = res.data.checkout_url;
     } catch (err) {
       console.error(err);
-      toast.error("Erro ao processar encomenda", {
+      toast.error("Erro ao iniciar pagamento", {
         description: err?.response?.data?.detail || "Tenta novamente.",
       });
-    } finally {
       setSubmitting(false);
     }
   };
@@ -194,8 +191,9 @@ export default function Checkout() {
             />
           </section>
 
-          <div className="rounded-lg border border-dashed border-white/15 bg-[#121212] p-4 text-sm text-zinc-400">
-            💳 Pagamento com cartão (Stripe) será ativado em breve. Por agora, a encomenda é registada e pagamento na entrega.
+          <div className="rounded-lg border border-white/15 bg-[#121212] p-4 flex items-center gap-3 text-sm text-zinc-400">
+            <Lock className="w-4 h-4 text-[#7EDAF2] shrink-0" />
+            Pagamento seguro processado pela Stripe. Serás redirecionado para concluir a compra.
           </div>
 
           <button
@@ -204,7 +202,7 @@ export default function Checkout() {
             disabled={submitting}
             className="cta-glow w-full inline-flex items-center justify-center gap-2 bg-[#7EDAF2] hover:bg-[#A5E8F7] disabled:opacity-60 text-black font-bold px-8 py-4 rounded-full uppercase tracking-wide"
           >
-            {submitting ? "A processar..." : `Confirmar Encomenda · ${formatPrice(total)}`}
+            {submitting ? "A redirecionar..." : `Pagar · ${formatPrice(total)}`}
           </button>
         </motion.form>
 

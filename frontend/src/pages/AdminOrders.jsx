@@ -16,7 +16,8 @@ import { AdminPartnerships } from "@/components/admin/AdminPartnerships";
 import { toast } from "sonner";
 
 const STATUS = [
-  { value: "pending", label: "Pendente", color: "text-amber-400 bg-amber-400/10 border-amber-400/30" },
+  { value: "pending_payment", label: "Aguarda pagamento", color: "text-zinc-400 bg-zinc-400/10 border-zinc-400/30" },
+  { value: "paid", label: "Pago", color: "text-green-400 bg-green-400/10 border-green-400/30" },
   { value: "processing", label: "Em processamento", color: "text-blue-400 bg-blue-400/10 border-blue-400/30" },
   { value: "shipped", label: "Enviada", color: "text-purple-400 bg-purple-400/10 border-purple-400/30" },
   { value: "delivered", label: "Entregue", color: "text-[#7EDAF2] bg-[#7EDAF2]/10 border-[#7EDAF2]/30" },
@@ -53,8 +54,10 @@ const OrdersPanel = () => {
     }
   };
 
-  const totalRevenue = orders.reduce((s, o) => s + o.total, 0);
-  const pendingCount = orders.filter((o) => o.status === "pending").length;
+  const totalRevenue = orders
+    .filter((o) => !["pending_payment", "cancelled"].includes(o.status))
+    .reduce((s, o) => s + o.total, 0);
+  const pendingCount = orders.filter((o) => o.status === "paid").length;
 
   return (
     <div>
@@ -78,7 +81,7 @@ const OrdersPanel = () => {
           <p className="font-display text-4xl text-[#7EDAF2] mt-2">{formatPrice(totalRevenue)}</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-[#121212] p-6" data-testid="stat-pending">
-          <div className="flex items-center gap-2 text-zinc-400 text-sm"><Clock className="w-4 h-4" /> Pendentes</div>
+          <div className="flex items-center gap-2 text-zinc-400 text-sm"><Clock className="w-4 h-4" /> Pagas (a processar)</div>
           <p className="font-display text-4xl text-amber-400 mt-2">{pendingCount}</p>
         </div>
       </div>

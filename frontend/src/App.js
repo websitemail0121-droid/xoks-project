@@ -17,6 +17,8 @@ import Cookies from "@/pages/legal/Cookies";
 import Envios from "@/pages/legal/Envios";
 import Devolucoes from "@/pages/legal/Devolucoes";
 import AvisoLegal from "@/pages/legal/AvisoLegal";
+import PaymentSuccess from "@/pages/PaymentSuccess";
+import PaymentCancel from "@/pages/PaymentCancel";
 
 function App() {
   return (
@@ -39,6 +41,8 @@ function App() {
             <Route path="/politica-de-envios" element={<Envios />} />
             <Route path="/politica-de-devolucoes" element={<Devolucoes />} />
             <Route path="/aviso-legal" element={<AvisoLegal />} />
+            <Route path="/payment/success" element={<PaymentSuccess />} />
+            <Route path="/payment/cancel" element={<PaymentCancel />} />
           </Routes>
         </BrowserRouter>
         <Toaster position="top-right" theme="dark" richColors />

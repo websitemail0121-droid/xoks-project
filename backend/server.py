@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, Request
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
+import stripe
 
 
 ROOT_DIR = Path(__file__).parent
@@ -17,6 +18,12 @@ load_dotenv(ROOT_DIR / '.env')
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
+
+stripe.api_key = os.environ.get("STRIPE_SECRET_KEY") or "sk_test_emergent"
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
+
+SHIPPING_COST = 4.99
+FREE_SHIPPING_THRESHOLD = 60.0
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
@@ -237,6 +244,29 @@ SEED_PRODUCTS = [
         "badge": "Pro",
         "featured": True,
     },
+    {
+        "id": "xoks-carbon-legacy",
+        "name": "XOK'S® Carbon Legacy",
+        "tagline": "Edição Limitada",
+        "description": "A XOK'S® Carbon Legacy é uma edição limitada com acabamentos exclusivos que celebram o legado da marca. Construída em carbono premium com camada protetora anti-riscos, apresenta padrões únicos que combinam performance de topo com estética inconfundível. Uma peça de coleção para quem exige o melhor.",
+        "price": 125.00,
+        "image": "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/28apeztn_45d0f583-8586-47e2-bf96-0eb8cbe770b7.png",
+        "gallery": [
+            "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/28apeztn_45d0f583-8586-47e2-bf96-0eb8cbe770b7.png",
+            "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/6tvtkf70_e33ff91f-da20-4c04-80ec-7ea94cf3af6c.png",
+            "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/1tpyh7df_026a5e35-f7e2-406d-b267-713927f09390.png",
+        ],
+        "colors": [],
+        "image_bg": "light",
+        "specs": [
+            "Edição limitada",
+            "Camada protetora anti-riscos",
+            "Acabamentos exclusivos",
+        ],
+        "sizes": ["XS", "S", "M", "L", "XL"],
+        "badge": "Edição Limitada",
+        "featured": True,
+    },
 ]
 
 SEED_ATHLETES = [
@@ -413,6 +443,151 @@ async def update_order_status(order_number: str, payload: OrderStatusUpdate):
     await db.orders.update_one({"order_number": order_number}, {"$set": {"status": payload.status}})
     o["status"] = payload.status
     return Order(**o)
+
+
+# ---------- Stripe checkout ----------
+class CheckoutRequest(BaseModel):
+    items: List[CartItem]
+    shipping: ShippingInfo
+    billing: BillingInfo
+    notes: Optional[str] = None
+    origin_url: str
+
+
+@api_router.post("/checkout")
+async def create_checkout(payload: CheckoutRequest):
+    if not payload.items:
+        raise HTTPException(status_code=400, detail="O carrinho está vazio")
+
+    # Recompute prices server-side from the DB (never trust client amounts)
+    line_items = []
+    verified_items = []
+    subtotal = 0.0
+    for it in payload.items:
+        product = await db.products.find_one({"id": it.product_id}, {"_id": 0})
+        if not product:
+            raise HTTPException(status_code=400, detail=f"Produto inválido: {it.name}")
+        unit_price = float(product["price"])
+        qty = max(1, int(it.quantity))
+        subtotal += unit_price * qty
+        display_name = product["name"] + (f" · Tam. {it.size}" if it.size else "")
+        line_items.append({
+            "price_data": {
+                "currency": "eur",
+                "product_data": {"name": display_name},
+                "unit_amount": int(round(unit_price * 100)),
+            },
+            "quantity": qty,
+        })
+        verified_items.append(CartItem(
+            product_id=it.product_id, name=product["name"], size=it.size,
+            price=unit_price, quantity=qty, image=product.get("image"),
+        ))
+
+    shipping_cost = 0.0 if subtotal >= FREE_SHIPPING_THRESHOLD else SHIPPING_COST
+    total = round(subtotal + shipping_cost, 2)
+
+    # Create the pending order first
+    count = await db.orders.count_documents({})
+    order_number = f"XOKS-{1000 + count + 1}"
+    order = Order(
+        order_number=order_number,
+        items=verified_items,
+        shipping=payload.shipping,
+        billing=payload.billing,
+        subtotal=round(subtotal, 2),
+        shipping_cost=shipping_cost,
+        total=total,
+        notes=payload.notes,
+        status="pending_payment",
+    )
+    await db.orders.insert_one(order.model_dump())
+
+    origin = payload.origin_url.rstrip("/")
+    session_kwargs = dict(
+        mode="payment",
+        line_items=line_items,
+        customer_email=payload.shipping.email,
+        success_url=f"{origin}/payment/success?session_id={{CHECKOUT_SESSION_ID}}",
+        cancel_url=f"{origin}/payment/cancel?order={order_number}",
+        metadata={"order_number": order_number},
+    )
+    if shipping_cost > 0:
+        session_kwargs["shipping_options"] = [{
+            "shipping_rate_data": {
+                "type": "fixed_amount",
+                "fixed_amount": {"amount": int(round(shipping_cost * 100)), "currency": "eur"},
+                "display_name": "Portes de envio",
+            },
+        }]
+
+    try:
+        session = stripe.checkout.Session.create(**session_kwargs)
+    except stripe.error.StripeError as e:
+        raise HTTPException(status_code=502, detail=f"Erro Stripe: {e.user_message or str(e)}")
+
+    await db.payment_transactions.insert_one({
+        "session_id": session.id,
+        "order_number": order_number,
+        "amount": total,
+        "currency": "eur",
+        "status": "initiated",
+        "payment_status": "pending",
+        "created_at": now_iso(),
+        "updated_at": now_iso(),
+    })
+
+    return {"checkout_url": session.url, "session_id": session.id, "order_number": order_number}
+
+
+async def _mark_paid(session_id: str, order_number: Optional[str], payment_intent: Optional[str]):
+    res = await db.payment_transactions.update_one(
+        {"session_id": session_id, "payment_status": {"$ne": "paid"}},
+        {"$set": {"status": "completed", "payment_status": "paid",
+                  "stripe_payment_intent_id": payment_intent, "updated_at": now_iso()}},
+    )
+    if res.modified_count and order_number:
+        await db.orders.update_one({"order_number": order_number}, {"$set": {"status": "paid"}})
+
+
+@api_router.get("/payments/status/{session_id}")
+async def payment_status(session_id: str):
+    record = await db.payment_transactions.find_one({"session_id": session_id}, {"_id": 0})
+    if not record:
+        raise HTTPException(status_code=404, detail="Transação não encontrada")
+    if record.get("payment_status") != "paid":
+        try:
+            s = stripe.checkout.Session.retrieve(session_id)
+            if s.payment_status == "paid" or s.status == "complete":
+                await _mark_paid(session_id, record.get("order_number"), s.payment_intent)
+                record = await db.payment_transactions.find_one({"session_id": session_id}, {"_id": 0})
+        except stripe.error.StripeError:
+            pass
+    return {
+        "session_id": record["session_id"],
+        "status": record["status"],
+        "payment_status": record["payment_status"],
+        "order_number": record.get("order_number"),
+    }
+
+
+@api_router.post("/stripe/webhook")
+async def stripe_webhook(request: Request):
+    payload = await request.body()
+    sig = request.headers.get("stripe-signature", "")
+    try:
+        event = stripe.Webhook.construct_event(payload, sig, STRIPE_WEBHOOK_SECRET)
+    except (stripe.error.SignatureVerificationError, ValueError):
+        raise HTTPException(status_code=400, detail="Assinatura inválida")
+    obj, t = event["data"]["object"], event["type"]
+    if t == "checkout.session.completed":
+        await _mark_paid(obj["id"], (obj.get("metadata") or {}).get("order_number"), obj.get("payment_intent"))
+    elif t == "checkout.session.expired":
+        await db.payment_transactions.update_one(
+            {"session_id": obj["id"]},
+            {"$set": {"status": "expired", "payment_status": "expired", "updated_at": now_iso()}},
+        )
+    return {"status": "ok"}
 
 
 @app.on_event("startup")

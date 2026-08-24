@@ -19,14 +19,19 @@ Loja online e-commerce single-product de alta conversão para "PatrickGomesFR XO
 - GET /api/products, GET /api/products/{id}
 - POST /api/orders, GET /api/orders, GET /api/orders/{order_number}, PATCH /api/orders/{order_number}
 
-## Implemented (2026-06)
-- Landing page completa: Hero, Value Proposition (bento + carbon texture), Product Showcase (size/qty/add-to-cart), Social Proof (testemunhos).
-- Slide-out cart dinâmico com atualização de quantidades/subtotal/total + envio grátis >60€.
-- Checkout de um passo (contacto, envio, faturação opcional, notas) → cria encomenda → página de sucesso.
-- Admin /admin: stats (total, receita, pendentes), tabela de encomendas expansível, mudança de estado.
-- AI-generated product images. Tested: backend 9/9, frontend E2E 100%.
+## Implemented
+- **2026-06**: Landing page, slide-out cart, checkout de um passo, Admin dashboard, produtos com imagens.
+- **2026-08**: 6 páginas legais (Termos, Privacidade, Cookies, Envios, Devoluções, Aviso Legal) + LegalLayout.
+- **2026-08**: Cookie Consent banner RGPD-compliant.
+- **2026-08**: Botão flutuante WhatsApp (+351 919 090 533).
+- **2026-08**: Stripe Checkout Session integrado (test mode) — substituiu checkout mockado. PaymentSuccess/PaymentCancel pages.
+- **2026-08**: Admin reconhece estados `pending_payment` e `paid`.
+- **2026-08 (24/08)**: Adicionado produto "XOK'S® Carbon Legacy" — 125,00 €, edição limitada, gallery: Red/Gold → Black/Gold → Green. Total: 5 produtos.
 
 ## Backlog / Next
-- P0: Integração Stripe real (checkout com cartão) — diferido por escolha do utilizador.
-- P1: Autenticação admin (proteger /admin), validação de status enum no PATCH, contador atómico de order_number.
-- P2: Emails de confirmação (Resend/SendGrid), múltiplos produtos, código de desconto, avaliações reais.
+- P0: Testar end-to-end Stripe checkout flow (adicionar ao carrinho → pagar em test mode → verificar em /admin).
+- P1: Analytics (Google Analytics / Meta Pixel) integrados ao Cookie Consent (obrigatório pelas políticas legais publicadas).
+- P1: Emails de confirmação de encomenda (Resend/SendGrid).
+- P1: Autenticação admin (proteger /admin), validação de status enum no PATCH.
+- P2: Adicionar clubes dos atletas (quando fornecidos pelo user).
+- P2: Refactor `server.py` (mover seed data para ficheiro separado — atualmente ~615 linhas).
