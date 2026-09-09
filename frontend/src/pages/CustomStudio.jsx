@@ -126,7 +126,7 @@ export default function CustomStudio() {
             transition={{ duration: 0.6, delay: 0.25 }}
             className="mt-6 max-w-xl text-lg text-zinc-400"
           >
-            Cria umas caneleiras únicas, produzidas exclusivamente para ti. Sem stock, sem repetições. Só a tua história em fibra de carbono.
+            Cria umas caneleiras únicas, feitas exclusivamente para ti. Um design personalizado com o teu nome, número e fotografias.
           </motion.p>
 
           {/* How it works badges */}

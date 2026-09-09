@@ -33,7 +33,7 @@ export const CustomStudioTeaser = () => {
 
             <p className="mt-6 text-zinc-400 max-w-md text-base">
               Cria umas caneleiras únicas com o teu nome, número e as tuas fotografias.
-              Sem stock, sem repetições — só a tua história em fibra de carbono.
+              Um design feito à medida, exclusivamente para ti.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-2">

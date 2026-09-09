@@ -27,10 +27,10 @@ export const ProductGrid = ({ products, hideHeader = false }) => {
           <div className="max-w-2xl mb-14">
             <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2]">A Coleção</span>
             <h2 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-none uppercase text-white mt-3">
-              Escolhe a tua arma
+              Modelos disponíveis
             </h2>
             <p className="text-zinc-400 mt-4">
-              Toda a gama XOK'S de caneleiras de alta performance. Proteção que acompanha o teu nível.
+              A gama completa XOK'S de caneleiras. Escolhe o modelo que se adapta ao teu jogo.
             </p>
           </div>
         )}

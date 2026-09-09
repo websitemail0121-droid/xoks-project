@@ -8,20 +8,20 @@ const CARBON =
 const pillars = [
   {
     icon: Shield,
-    title: "Material Ultra Resistente",
-    desc: "Casca em fibra de carbono capaz de dissipar impactos violentos sem fissurar. A tua perna, blindada.",
+    title: "Material Resistente",
+    desc: "Casca em fibra de carbono que dissipa os impactos sem fissurar. Proteção real para a tíbia.",
     testid: "pillar-material",
   },
   {
     icon: Feather,
     title: "Design Anatómico",
-    desc: "Curvatura esquerda/direita que abraça a tíbia. Conforto total durante os 90 minutos, sem incómodos.",
+    desc: "Curvatura esquerda e direita ajustada à tíbia. Conforto durante os 90 minutos.",
     testid: "pillar-anatomico",
   },
   {
     icon: Sparkles,
-    title: "Exclusividade XOK'S",
-    desc: "Acabamentos premium e detalhes em verde-lima. Equipamento de elite que se vê e se sente.",
+    title: "Acabamentos XOK'S",
+    desc: "Detalhes cuidados e acabamentos premium. Um equipamento que se nota.",
     testid: "pillar-exclusividade",
   },
 ];
@@ -35,7 +35,7 @@ export const ValueProposition = () => {
             Porquê XOK'S
           </span>
           <h2 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-none uppercase text-white mt-3">
-            Engenharia para vencedores
+            Feitas para durar
           </h2>
         </div>
 
@@ -75,10 +75,10 @@ export const ValueProposition = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
           <div className="relative z-10 p-8 sm:p-12 max-w-xl">
             <h3 className="font-display text-3xl sm:text-4xl uppercase text-white">
-              Testadas em campo. <span className="text-[#7EDAF2]">Aprovadas por profissionais.</span>
+              Testadas em campo por <span className="text-[#7EDAF2]">jogadores reais.</span>
             </h3>
             <p className="text-zinc-300 mt-3">
-              Cada par XOK'S passa por testes de impacto reais antes de chegar aos teus pés.
+              Cada par XOK'S é testado antes de sair para os nossos clientes.
             </p>
           </div>
         </div>

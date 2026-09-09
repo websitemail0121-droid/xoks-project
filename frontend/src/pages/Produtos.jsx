@@ -13,19 +13,19 @@ const SECTIONS = [
     id: "collection",
     eyebrow: "A Coleção",
     title: "Original",
-    subtitle: "Os modelos icónicos que fizeram história — proteção comprovada em campo.",
+    subtitle: "Os modelos originais XOK'S.",
   },
   {
     id: "carbon",
     eyebrow: "Carbon Line",
     title: "Fibra de Carbono",
-    subtitle: "Acabamentos premium em carbono real. Leveza, rigidez e visual inconfundível.",
+    subtitle: "Acabamentos em carbono real. Leveza e resistência para quem procura o melhor.",
   },
   {
     id: "custom",
     eyebrow: "XOK'S® Custom Studio",
-    title: "Design Your Identity",
-    subtitle: "Cria umas caneleiras únicas — com o teu nome, número e as tuas fotografias.",
+    title: "Personalizadas",
+    subtitle: "Cria umas caneleiras únicas com o teu nome, número e fotografias.",
     isCustom: true,
   },
 ];
@@ -122,7 +122,7 @@ function CustomStudioBanner() {
             <span className="text-[10px] font-bold tracking-[0.35em] uppercase text-[#7EDAF2]">XOK&apos;S® Custom Studio</span>
           </div>
           <h3 className="font-display text-3xl sm:text-4xl uppercase text-white leading-tight">
-            Cria a tua <span className="text-[#7EDAF2]">história</span> em carbono
+            Personaliza as tuas <span className="text-[#7EDAF2]">caneleiras</span>
           </h3>
           <p className="text-zinc-400 mt-3 text-sm max-w-md">
             Escolhe o carbono, adiciona nome, número e fotografias. Enviamos-te o preview em 48h para aprovares antes de produzirmos.
@@ -163,7 +163,7 @@ export default function Produtos() {
         eyebrow="A Coleção"
         title="Caneleiras XOK'S"
         accentWord="XOK'S"
-        subtitle="Toda a gama de caneleiras de alta performance, organizada por linha. Escolhe o teu estilo — do original ao 100% personalizado."
+        subtitle="A gama completa de caneleiras, organizada por linha. Do modelo original ao 100% personalizado."
       />
       <section data-testid="produtos-page" className="relative pb-24 bg-[#0d0d0d]">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 space-y-24">

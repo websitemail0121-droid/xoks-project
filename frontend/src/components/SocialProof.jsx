@@ -9,19 +9,19 @@ const reviews = [
   {
     name: "Ricardo Moreira",
     role: "Médio · Liga Profissional",
-    text: "Nunca senti tanta leveza numa caneleira. Esqueço-me que as tenho postas até levar um pontapé — e nem sinto.",
+    text: "São muito leves e nem se notam durante o jogo. Boa proteção e acabamento cuidado.",
     rating: 5,
   },
   {
     name: "André Costa",
     role: "Lateral · Sub-23",
-    text: "A proteção é brutal. Já parei entradas duras sem uma única marca na perna. Recomendo a 100%.",
+    text: "Já apanhei entradas duras e não tive marcas na perna. Vale bem o investimento.",
     rating: 5,
   },
   {
     name: "Tiago Ferreira",
     role: "Avançado · Distrital",
-    text: "Design top e encaixe perfeito. As cintas não escorregam durante o jogo. Qualidade profissional.",
+    text: "Encaixam bem e não escorregam. Design simples e bem feito.",
     rating: 5,
   },
 ];
@@ -44,17 +44,16 @@ export const SocialProof = () => {
             <div className="absolute bottom-0 left-0 p-8">
               <Quote className="w-10 h-10 text-[#7EDAF2] mb-3" />
               <p className="text-xl font-semibold text-white leading-snug">
-                "Confio nas XOK'S em cada jogo. É a diferença entre proteger a carreira ou arriscá-la."
+                &quot;Uso as XOK&apos;S em todos os jogos. Fazem a diferença.&quot;
               </p>
-              <p className="mt-4 font-display text-2xl uppercase text-[#7EDAF2]">Capitão da equipa</p>
             </div>
           </motion.div>
 
           {/* Reviews */}
           <div className="lg:col-span-7">
-            <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2]">Prova Social</span>
+            <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2]">Testemunhos</span>
             <h2 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-none uppercase text-white mt-3 mb-10">
-              Quem joga, confia
+              O que dizem os jogadores
             </h2>
 
             <div className="space-y-4">

@@ -8,12 +8,12 @@ export const AthleteCarousel = ({ athletes, hideHeader = false }) => {
     <section id="atletas" className="relative py-24 sm:py-32 bg-[#0A0A0A] overflow-hidden">
       {!hideHeader && (
         <div className="max-w-7xl mx-auto px-5 sm:px-8 mb-12">
-          <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2]">Prova Social</span>
+          <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2]">Atletas XOK'S</span>
           <h2 className="font-display text-[clamp(2.5rem,6vw,4rem)] leading-none uppercase text-white mt-3">
-            Atletas que confiam nas XOK'S
+            Jogadores que usam XOK'S
           </h2>
           <p className="text-zinc-400 mt-4 max-w-xl">
-            De campos distritais a estádios de topo — os que levam o jogo a sério equipam-se com XOK'S.
+            De jogadores distritais a profissionais — usam XOK'S no dia-a-dia.
           </p>
         </div>
       )}

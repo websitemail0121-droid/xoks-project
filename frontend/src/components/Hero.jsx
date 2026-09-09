@@ -12,9 +12,9 @@ const specs = [
 ];
 
 const trust = [
-  { icon: ShieldCheck, title: "Proteção Garantida", desc: "Tecnologia de fibra de carbono premium." },
-  { icon: Award, title: "Qualidade Premium", desc: "Materiais de alta performance e durabilidade." },
-  { icon: Lock, title: "Compra Segura", desc: "Os teus dados protegidos do início ao fim." },
+  { icon: ShieldCheck, title: "Proteção Real", desc: "Fibra de carbono de qualidade certificada." },
+  { icon: Award, title: "Qualidade Premium", desc: "Materiais duradouros e testados em campo." },
+  { icon: Lock, title: "Compra Segura", desc: "Pagamento processado pela Stripe." },
 ];
 
 export const Hero = ({ onCta }) => {
@@ -76,9 +76,9 @@ export const Hero = ({ onCta }) => {
               transition={{ duration: 0.7, delay: 0.05 }}
               className="font-display text-[clamp(3.5rem,9vw,7.5rem)] leading-[0.82] uppercase text-white"
             >
-              Blinda
+              Caneleiras
               <br />
-              o teu <span className="text-[#7EDAF2]">jogo</span>
+              em <span className="text-[#7EDAF2]">carbono</span>
             </motion.h1>
 
             <motion.p
@@ -87,8 +87,8 @@ export const Hero = ({ onCta }) => {
               transition={{ duration: 0.7, delay: 0.15 }}
               className="mt-7 text-lg sm:text-xl text-zinc-400 max-w-lg leading-relaxed"
             >
-              Caneleiras em fibra de carbono para quem leva a proteção
-              <span className="text-white font-semibold"> ao próximo nível.</span>
+              Caneleiras premium para futebolistas exigentes.
+              <span className="text-white font-semibold"> Feitas em Portugal.</span>
             </motion.p>
 
             <motion.div
@@ -109,7 +109,7 @@ export const Hero = ({ onCta }) => {
                 href="#vantagens"
                 className="text-sm font-semibold text-zinc-400 hover:text-white transition-colors uppercase tracking-widest px-2"
               >
-                Descobre a tecnologia
+                Saber mais
               </a>
             </motion.div>
 
