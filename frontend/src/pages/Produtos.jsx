@@ -43,7 +43,7 @@ function ProductCard({ p, isCustom }) {
   };
 
   const linkTo = isCustom
-    ? `/custom-studio/build?tier=${p.id === "studio-pro" ? "pro" : "base"}`
+    ? `/custom-studio?tier=${p.id === "studio-pro" ? "pro" : "base"}`
     : `/produto/${p.id}`;
 
   return (

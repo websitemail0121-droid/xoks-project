@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Check, Palette, Camera, Clock } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
@@ -59,8 +59,13 @@ const TIERS = [
 
 export default function CustomStudio() {
   const navigate = useNavigate();
-  const [carbon, setCarbon] = useState("plain");
-  const [tier, setTier] = useState("base");
+  const [searchParams] = useSearchParams();
+  const initialTier = searchParams.get("tier") === "pro" ? "pro" : "base";
+  const initialCarbon = ["plain", "twill", "fusion"].includes(searchParams.get("carbon"))
+    ? searchParams.get("carbon")
+    : "plain";
+  const [carbon, setCarbon] = useState(initialCarbon);
+  const [tier, setTier] = useState(initialTier);
   const [products, setProducts] = useState({});
 
   useEffect(() => {
@@ -71,6 +76,17 @@ export default function CustomStudio() {
       setProducts(map);
     }).catch(() => {});
   }, []);
+
+  // If arriving with ?tier= param, smoothly scroll to Passo 2 so the selection is clear
+  useEffect(() => {
+    if (searchParams.get("tier")) {
+      const t = setTimeout(() => {
+        const el = document.getElementById("passo-2");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 400);
+      return () => clearTimeout(t);
+    }
+  }, [searchParams]);
 
   const selectedTier = TIERS.find((t) => t.id === tier);
   const selectedCarbon = CARBON_OPTIONS.find((c) => c.id === carbon);
@@ -86,10 +102,10 @@ export default function CustomStudio() {
       <CartSheet />
 
       {/* Hero */}
-      <section className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
+      <section className="relative pt-24 pb-14 sm:pt-40 sm:pb-28 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,#7EDAF215,transparent_50%),radial-gradient(circle_at_80%_100%,#7EDAF210,transparent_50%)] pointer-events-none" />
         <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' /%3E%3C/svg%3E\")" }} />
-        <div className="relative max-w-5xl mx-auto px-5 sm:px-8">
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex items-center gap-2 mb-6">
             <div className="w-10 h-[1px] bg-[#7EDAF2]" />
             <span className="text-xs font-bold tracking-[0.35em] uppercase text-[#7EDAF2]">XOK&apos;S® Custom Studio</span>
@@ -136,8 +152,8 @@ export default function CustomStudio() {
       </section>
 
       {/* PASSO 1: Choose Carbon */}
-      <section className="relative py-20 bg-[#0d0d0d] border-y border-white/5">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+      <section className="relative py-14 sm:py-20 bg-[#0d0d0d] border-y border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="flex items-baseline gap-4 mb-3">
             <span className="font-display text-6xl text-[#7EDAF2]/30 leading-none">01</span>
             <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2]">Passo 1</span>
@@ -190,8 +206,8 @@ export default function CustomStudio() {
       </section>
 
       {/* PASSO 2: Choose Tier */}
-      <section className="relative py-20">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+      <section id="passo-2" className="relative py-14 sm:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="flex items-baseline gap-4 mb-3">
             <span className="font-display text-6xl text-[#7EDAF2]/30 leading-none">02</span>
             <span className="text-xs font-bold tracking-[0.3em] uppercase text-[#7EDAF2]">Passo 2</span>

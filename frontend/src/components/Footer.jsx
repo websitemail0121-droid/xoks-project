@@ -20,9 +20,9 @@ export const Footer = () => {
           <h4 className="font-bold text-white uppercase text-sm tracking-wide mb-4">Navegação</h4>
           <ul className="space-y-2 text-zinc-400 text-sm">
             <li><Link to="/produtos" className="hover:text-[#7EDAF2] transition-colors">Produtos</Link></li>
+            <li><Link to="/custom-studio" className="hover:text-[#7EDAF2] transition-colors">Custom Studio</Link></li>
             <li><Link to="/atletas" className="hover:text-[#7EDAF2] transition-colors">Atletas</Link></li>
             <li><Link to="/sobre" className="hover:text-[#7EDAF2] transition-colors">Sobre Nós</Link></li>
-            <li><Link to="/parcerias" className="hover:text-[#7EDAF2] transition-colors">Parcerias</Link></li>
           </ul>
         </div>
         <div>

@@ -2,12 +2,12 @@ import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/context/CartContext";
 import { Toaster } from "@/components/ui/sonner";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import Home from "@/pages/Home";
 import Produtos from "@/pages/Produtos";
 import ProductDetail from "@/pages/ProductDetail";
 import Atletas from "@/pages/Atletas";
 import SobreNos from "@/pages/SobreNos";
-import Parcerias from "@/pages/Parcerias";
 import Checkout from "@/pages/Checkout";
 import OrderSuccess from "@/pages/OrderSuccess";
 import AdminOrders from "@/pages/AdminOrders";
@@ -33,7 +33,6 @@ function App() {
             <Route path="/produto/:productId" element={<ProductDetail />} />
             <Route path="/atletas" element={<Atletas />} />
             <Route path="/sobre" element={<SobreNos />} />
-            <Route path="/parcerias" element={<Parcerias />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/sucesso/:orderNumber" element={<OrderSuccess />} />
             <Route path="/admin" element={<AdminOrders />} />
@@ -48,6 +47,7 @@ function App() {
             <Route path="/custom-studio" element={<CustomStudio />} />
             <Route path="/custom-studio/build" element={<CustomStudioBuild />} />
           </Routes>
+          <WhatsAppButton />
         </BrowserRouter>
         <Toaster position="top-right" theme="dark" richColors />
       </CartProvider>

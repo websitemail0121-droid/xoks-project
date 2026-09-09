@@ -24,6 +24,7 @@ Loja online e-commerce single-product de alta conversão para "PatrickGomesFR XO
 - **2026-08**: 6 páginas legais + LegalLayout, Cookie Consent banner RGPD, WhatsApp flutuante, Stripe Checkout Session (test mode), PaymentSuccess/Cancel, Admin com pending_payment/paid.
 - **2026-08 (24/08)**: Produto "XOK'S® Carbon Legacy" adicionado — 125€, edição limitada.
 - **2026-08 (24/08)**: **XOK'S® Custom Studio completo** — landing `/custom-studio` (Design Your Identity, 2 passos: carbono + tier), configurador `/custom-studio/build` (nome, número, upload de fotos JPG/PNG via Emergent Object Storage, observações), 2 produtos custom (Studio Base 92,90€ e Studio Pro 99,90€) com delta por carbono (+0/+5/+10€). Página `/produtos` reorganizada em 3 secções: Original, Fibra de Carbono, Custom Studio. Teaser Custom Studio na homepage. Admin mostra custom_data + links para fotos. Stripe recompute server-side. Tests 45/45 pass.
+- **2026-09 (09/09)**: Otimizações — página `/parcerias` removida, WhatsApp button agora global (todas as páginas), menu mobile responsivo com hamburger, navegação para `/custom-studio?tier=X` na página de produtos (walkthrough completo antes do configurador), preview do build agora mostra imagem estática do carbono selecionado (sem preview de upload).
 
 ## Backend endpoints
 - `POST /api/uploads/custom-photo` — upload JPG/PNG (máx 8MB) → `{id, url, content_type, size}`

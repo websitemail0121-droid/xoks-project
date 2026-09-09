@@ -10,9 +10,9 @@ import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
 
 const CARBON_META = {
-  plain: { label: "Carbon Plain", delta: 0, tagline: "Plain Weave" },
-  twill: { label: "Carbon Twill", delta: 5, tagline: "2x2 Twill" },
-  fusion: { label: "Carbon Fusion", delta: 10, tagline: "GG215 · Diamond" },
+  plain: { label: "Carbon Plain", delta: 0, tagline: "Plain Weave", image: "/carbon-plain-v1.png" },
+  twill: { label: "Carbon Twill", delta: 5, tagline: "2x2 Twill", image: "/carbon-twill.png" },
+  fusion: { label: "Carbon Fusion", delta: 10, tagline: "GG215 · Diamond", image: "/carbon-fusion.png" },
 };
 
 const TIER_META = {
@@ -31,31 +31,35 @@ const PhotoSlot = ({ label, required, file, onSelect, onClear, testid }) => {
       </label>
       <div className="mt-2 relative">
         {file ? (
-          <div className="relative rounded-xl border border-[#7EDAF2]/40 bg-[#0f1a1e] overflow-hidden aspect-[3/4]">
-            <img src={file.previewUrl} alt={label} className="w-full h-full object-cover" />
+          <div className="relative rounded-xl border border-[#7EDAF2]/40 bg-[#0f1a1e] p-4 flex flex-col items-center justify-center gap-3 min-h-[140px]">
+            <div className="w-12 h-12 rounded-full bg-[#7EDAF2]/20 flex items-center justify-center">
+              <Check className="w-6 h-6 text-[#7EDAF2]" strokeWidth={3} />
+            </div>
+            <div className="text-center">
+              <p className="text-xs font-semibold text-[#7EDAF2] uppercase tracking-wide">Carregada</p>
+              <p className="text-[11px] text-zinc-400 mt-1 truncate max-w-[140px] mx-auto">{file.name}</p>
+            </div>
             <button
               type="button"
               onClick={onClear}
               data-testid={`${testid}-clear`}
-              className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 hover:bg-red-500/80 text-white flex items-center justify-center backdrop-blur-sm transition-colors"
+              className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/50 hover:bg-red-500/80 text-white flex items-center justify-center transition-colors"
+              aria-label="Remover foto"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5" />
             </button>
-            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-2.5 text-[11px] text-[#7EDAF2] flex items-center gap-1.5">
-              <Check className="w-3.5 h-3.5" strokeWidth={3} /> {file.name.length > 24 ? file.name.slice(0, 22) + "..." : file.name}
-            </div>
           </div>
         ) : (
           <label
             data-testid={`${testid}-input`}
-            className="aspect-[3/4] rounded-xl border border-dashed border-white/15 bg-[#0d0d0d] hover:border-[#7EDAF2] hover:bg-[#7EDAF2]/[0.04] flex flex-col items-center justify-center gap-3 cursor-pointer transition-colors group"
+            className="min-h-[140px] rounded-xl border border-dashed border-white/15 bg-[#0d0d0d] hover:border-[#7EDAF2] hover:bg-[#7EDAF2]/[0.04] flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors group p-4"
           >
-            <div className="w-12 h-12 rounded-full bg-white/5 group-hover:bg-[#7EDAF2]/20 flex items-center justify-center transition-colors">
-              <Upload className="w-5 h-5 text-zinc-400 group-hover:text-[#7EDAF2] transition-colors" />
+            <div className="w-10 h-10 rounded-full bg-white/5 group-hover:bg-[#7EDAF2]/20 flex items-center justify-center transition-colors">
+              <Upload className="w-4 h-4 text-zinc-400 group-hover:text-[#7EDAF2] transition-colors" />
             </div>
-            <div className="text-center px-3">
-              <p className="text-sm font-semibold text-zinc-300 group-hover:text-white">Carregar foto</p>
-              <p className="text-[11px] text-zinc-500 mt-0.5">JPG ou PNG · máx. 8MB</p>
+            <div className="text-center">
+              <p className="text-xs font-semibold text-zinc-300 group-hover:text-white">Carregar foto</p>
+              <p className="text-[10px] text-zinc-500 mt-0.5">JPG · PNG · máx. 8MB</p>
             </div>
             <input
               type="file"
@@ -116,7 +120,6 @@ export default function CustomStudioBuild() {
     }
     setUploading(slot);
     try {
-      const previewUrl = URL.createObjectURL(file);
       const form = new FormData();
       form.append("file", file);
       const res = await api.post("/uploads/custom-photo", form, {
@@ -128,7 +131,6 @@ export default function CustomStudioBuild() {
           id: res.data.id,
           url: res.data.url,
           name: file.name,
-          previewUrl,
         },
       }));
       toast.success("Foto carregada");
@@ -144,7 +146,6 @@ export default function CustomStudioBuild() {
   const handleClear = (slot) => {
     setPhotos((p) => {
       const n = { ...p };
-      if (n[slot]?.previewUrl) URL.revokeObjectURL(n[slot].previewUrl);
       delete n[slot];
       return n;
     });
@@ -179,12 +180,12 @@ export default function CustomStudioBuild() {
         id: tier.id,
         name: `XOK'S® ${tier.name} · ${carbon.label}`,
         price: finalPrice,
-        image: photos.left.previewUrl || photos.left.url,
+        image: carbon.image,
       };
       addItem(productLike, size, 1, {
         custom_data: customData,
         price: finalPrice,
-        image: photos.left.url, // stored image is the API URL (persistent)
+        image: carbon.image,
         name: productLike.name,
       });
       toast.success("Adicionado ao carrinho", {
@@ -206,7 +207,7 @@ export default function CustomStudioBuild() {
       <Navigation />
       <CartSheet />
 
-      <div className="pt-24 max-w-7xl mx-auto px-5 sm:px-8">
+      <div className="pt-20 sm:pt-24 max-w-7xl mx-auto px-4 sm:px-8">
         <button
           onClick={() => navigate("/custom-studio")}
           data-testid="build-back-btn"
@@ -216,7 +217,7 @@ export default function CustomStudioBuild() {
         </button>
       </div>
 
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-8 pb-24 grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-6 sm:pt-8 pb-20 sm:pb-24 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10">
         {/* Left column: preview + summary */}
         <aside className="lg:col-span-5">
           <div className="lg:sticky lg:top-28 space-y-6">
@@ -225,19 +226,14 @@ export default function CustomStudioBuild() {
               animate={{ opacity: 1, y: 0 }}
               className="relative rounded-3xl overflow-hidden border border-white/10 bg-[#FEFEFE] aspect-square flex items-center justify-center"
             >
-              {photos.left ? (
-                <img src={photos.left.previewUrl} alt="Preview" className="w-full h-full object-cover" />
-              ) : (
-                <div className="text-center px-8">
-                  <div className="w-16 h-16 rounded-full bg-black/5 mx-auto flex items-center justify-center mb-4">
-                    <Upload className="w-6 h-6 text-black/40" />
-                  </div>
-                  <p className="font-display text-2xl uppercase text-black/70">A tua foto aqui</p>
-                  <p className="text-black/40 text-sm mt-2">Carrega a foto principal para veres o preview</p>
-                </div>
-              )}
+              <img
+                src={carbon.image}
+                alt={carbon.label}
+                data-testid="build-static-preview"
+                className="w-[75%] h-[85%] object-contain"
+              />
               <div className="absolute top-4 left-4 bg-black/80 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full backdrop-blur">
-                Preview
+                {carbon.label}
               </div>
             </motion.div>
 

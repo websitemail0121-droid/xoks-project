@@ -3,7 +3,6 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { CartSheet } from "@/components/CartSheet";
 import { CookieConsent } from "@/components/CookieConsent";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export const Layout = ({ children }) => {
   return (
@@ -13,7 +12,6 @@ export const Layout = ({ children }) => {
       <main className="flex-1">{children}</main>
       <Footer />
       <CookieConsent />
-      <WhatsAppButton />
     </div>
   );
 };
