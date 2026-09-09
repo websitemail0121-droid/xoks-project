@@ -10,14 +10,26 @@ import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
 
 const CARBON_META = {
-  plain: { label: "Carbon Plain", delta: 0, tagline: "Plain Weave", image: "/carbon-plain-v1.png" },
-  twill: { label: "Carbon Twill", delta: 5, tagline: "2x2 Twill", image: "/carbon-twill.png" },
-  fusion: { label: "Carbon Fusion", delta: 10, tagline: "GG215 · Diamond", image: "/carbon-fusion.png" },
+  plain: { label: "Carbon Plain", delta: 0, tagline: "Plain Weave" },
+  twill: { label: "Carbon Twill", delta: 5, tagline: "2x2 Twill" },
+  fusion: { label: "Carbon Fusion", delta: 10, tagline: "GG215 · Diamond" },
 };
 
 const TIER_META = {
-  base: { id: "studio-base", name: "Studio Base", maxPhotos: 2, price: 92.9 },
-  pro: { id: "studio-pro", name: "Studio Pro", maxPhotos: 4, price: 99.9 },
+  base: {
+    id: "studio-base",
+    name: "Studio Base",
+    maxPhotos: 2,
+    price: 92.9,
+    image: "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/ql0rqrsp_Captura%20de%20ecr%C3%A3%202026-08-24%20191243.png",
+  },
+  pro: {
+    id: "studio-pro",
+    name: "Studio Pro",
+    maxPhotos: 4,
+    price: 99.9,
+    image: "https://customer-assets-lqy194kg.emergentagent.net/job_xoks-shin-guards/artifacts/mk5elhi1_Captura%20de%20ecr%C3%A3%202026-08-24%20192818.png",
+  },
 };
 
 const SIZES = ["XS", "S", "M", "L", "XL"];
@@ -180,12 +192,12 @@ export default function CustomStudioBuild() {
         id: tier.id,
         name: `XOK'S® ${tier.name} · ${carbon.label}`,
         price: finalPrice,
-        image: carbon.image,
+        image: tier.image,
       };
       addItem(productLike, size, 1, {
         custom_data: customData,
         price: finalPrice,
-        image: carbon.image,
+        image: tier.image,
         name: productLike.name,
       });
       toast.success("Adicionado ao carrinho", {
@@ -227,13 +239,13 @@ export default function CustomStudioBuild() {
               className="relative rounded-3xl overflow-hidden border border-white/10 bg-[#FEFEFE] aspect-square flex items-center justify-center"
             >
               <img
-                src={carbon.image}
-                alt={carbon.label}
+                src={tier.image}
+                alt={tier.name}
                 data-testid="build-static-preview"
-                className="w-[75%] h-[85%] object-contain"
+                className="w-full h-full object-contain"
               />
               <div className="absolute top-4 left-4 bg-black/80 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full backdrop-blur">
-                {carbon.label}
+                {tier.name}
               </div>
             </motion.div>
 
