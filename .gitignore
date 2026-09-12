@@ -32,6 +32,7 @@ dist
 
 # Environment files (comprehensive coverage)
 
+*.env
 *token.json*
 *credentials.json*
 
@@ -81,3 +82,4 @@ memory/test_credentials.md
 # Mobile development
 android-sdk/archive.zip
 archive.zip
+frontend/node_modules/.cache/default-development/0.pack
